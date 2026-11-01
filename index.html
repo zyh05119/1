@@ -15,290 +15,271 @@
             background-color: #0a0a0a;
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             min-height: 100vh;
+            color: #eaeaea;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem 1rem;
-            color: #eaeaea;
         }
 
-        .tool-collection {
+        /* 上方 40% 区域：标题 + 分割线 */
+        .hero {
+            min-height: 40vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 2rem;
             max-width: 1100px;
             width: 100%;
             margin: 0 auto;
         }
 
-        .header {
-            text-align: left;
-            margin-bottom: 2rem;
-            padding-left: 0.25rem;
-            border-left: 4px solid #3b82f6;
-        }
-
-        .header h1 {
-            font-size: 2rem;
+        .hero h1 {
+            font-size: 2.6rem;
             font-weight: 600;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
             color: #ffffff;
-            margin-bottom: 0.3rem;
-            line-height: 1.2;
+            line-height: 1.15;
+            margin-bottom: 0.5rem;
         }
 
-        .header p {
-            font-size: 0.9rem;
+        .hero p {
+            font-size: 1rem;
             color: #9ca3af;
             font-weight: 400;
             letter-spacing: 0.3px;
         }
 
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 0.9rem;
+        /* 横贯页面的分割线，正好在 4/10 附近 */
+        .divider {
             width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #2e2e2e 15%, #2e2e2e 85%, transparent);
+            flex-shrink: 0;
         }
 
-        .tool-card {
-            background: #141414;
-            border: 1px solid #262626;
-            border-radius: 14px;
-            padding: 1.1rem 1rem;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-        }
-
-        .tool-card:hover {
-            background: #1c1c1c;
-            border-color: #3b82f6;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px -6px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(59, 130, 246, 0.2);
-        }
-
-        .tool-icon {
-            font-size: 1.6rem;
-            line-height: 1;
-            margin-bottom: 0.6rem;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
-            width: fit-content;
-            background: #1f1f1f;
-            padding: 0.15rem 0.2rem 0.05rem 0.2rem;
-            border-radius: 10px;
-        }
-
-        .tool-name {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #f3f4f6;
-            margin-bottom: 0.3rem;
-            letter-spacing: -0.01em;
-        }
-
-        .tool-desc {
-            font-size: 0.75rem;
-            color: #9ca3af;
-            line-height: 1.4;
-            margin-bottom: 0.5rem;
+        /* 下方链接区 */
+        .links-section {
             flex: 1;
+            padding: 2rem;
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
         }
 
-        .tool-action {
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: #3b82f6;
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.6rem;
+        }
+
+        /* 扁平的链接卡片 */
+        .link-item {
             display: flex;
             align-items: center;
-            gap: 0.2rem;
-            opacity: 0.8;
-            transition: opacity 0.2s;
+            gap: 0.6rem;
+            padding: 0.55rem 0.9rem;
+            background: #111111;
+            border: 1px solid #1f1f1f;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #d4d4d8;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .tool-card:hover .tool-action {
+        .link-item:hover {
+            background: #1a1a1a;
+            border-color: #3b82f6;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .link-item .ico {
+            font-size: 0.95rem;
+            line-height: 1;
+            flex-shrink: 0;
+            opacity: 0.85;
+        }
+
+        .link-item .arrow {
+            margin-left: auto;
+            font-size: 0.75rem;
+            color: #3b82f6;
+            opacity: 0;
+            transition: opacity 0.15s;
+            flex-shrink: 0;
+        }
+
+        .link-item:hover .arrow {
             opacity: 1;
         }
 
-        .tool-action span {
-            font-size: 0.85rem;
-            line-height: 1;
-        }
-
-        /* 空卡片样式，稍微不一样一点 */
-        .tool-card.empty {
+        /* 空占位链接，虚线且稍暗 */
+        .link-item.empty {
             border-style: dashed;
-            border-color: #2e2e2e;
-            background: #101010;
+            border-color: #232323;
+            color: #6b7280;
         }
 
-        .tool-card.empty:hover {
+        .link-item.empty:hover {
             border-color: #3b82f6;
-            background: #181818;
-        }
-
-        .tool-card.empty .tool-icon {
-            opacity: 0.6;
-            background: #181818;
-        }
-
-        .tool-card.empty .tool-name {
             color: #a1a1aa;
         }
 
-        .footer-note {
-            margin-top: 2.5rem;
-            font-size: 0.7rem;
+        .link-item.empty .arrow {
             color: #4b5563;
-            text-align: center;
-            letter-spacing: 0.5px;
-            border-top: 1px solid #1f1f1f;
-            padding-top: 1rem;
-            width: 100%;
         }
 
-        @media (max-width: 500px) {
-            .header h1 {
-                font-size: 1.6rem;
+        .footer-note {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #3f3f46;
+            padding: 1.5rem 1rem 2rem;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 600px) {
+            .hero {
+                min-height: 35vh;
+                padding: 0 1.25rem;
             }
-            .tool-card {
-                padding: 0.9rem;
+            .hero h1 {
+                font-size: 1.9rem;
             }
-            .tools-grid {
-                gap: 0.7rem;
+            .hero p {
+                font-size: 0.9rem;
+            }
+            .links-section {
+                padding: 1.5rem 1.25rem;
+            }
+            .links-grid {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 0.5rem;
+            }
+            .link-item {
+                padding: 0.5rem 0.7rem;
+                font-size: 0.78rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="tool-collection">
-        <div class="header">
-            <h1>冷涩调err</h1>
-            <p>你今天想做些什么呢？</p>
-        </div>
+    <!-- 上方标题区，占据约 40% 高度 -->
+    <div class="hero">
+        <h1>冷涩调er随手做的小网站</h1>
+        <p>你今天想做些什么呢？</p>
+    </div>
 
-        <div class="tools-grid">
-            <!-- 已有工具（12个） -->
-            <a href="https://tool.shahefu.cn/tool/timestamp" class="tool-card" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">⏱️</div>
-                <div class="tool-name">时间戳转换</div>
-                <div class="tool-desc">Unix 时间戳与日期格式互转</div>
-                <div class="tool-action">打开 <span>↗</span></div>
+    <!-- 横贯页面的分割线 -->
+    <div class="divider"></div>
+
+    <!-- 下方扁平链接区 -->
+    <div class="links-section">
+        <div class="links-grid">
+            <a href="https://tool.shahefu.cn/tool/timestamp" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico">⏱️</span>
+                <span>时间戳转换</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="https://www.json.cn/" class="tool-card" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">📋</div>
-                <div class="tool-name">JSON 格式化</div>
-                <div class="tool-desc">美化、压缩、校验 JSON</div>
-                <div class="tool-action">打开 <span>↗</span></div>
+            <a href="https://www.json.cn/" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico">📋</span>
+                <span>JSON 格式化</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="https://base64.shuttlelab.org/" class="tool-card" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">🔐</div>
-                <div class="tool-name">Base64 编解码</div>
-                <div class="tool-desc">文本与 Base64 互转</div>
-                <div class="tool-action">打开 <span>↗</span></div>
+            <a href="https://base64.shuttlelab.org/" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico">🔐</span>
+                <span>Base64 编解码</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="https://qilingtools.com/zh/color" class="tool-card" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">🎨</div>
-                <div class="tool-name">颜色转换器</div>
-                <div class="tool-desc">HEX、RGB、HSL 互转</div>
-                <div class="tool-action">打开 <span>↗</span></div>
+            <a href="https://qilingtools.com/zh/color" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico">🎨</span>
+                <span>颜色转换器</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="https://volade.com/zh/mima-shengchengqi.html" class="tool-card" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">🔑</div>
-                <div class="tool-name">密码生成器</div>
-                <div class="tool-desc">生成高强度随机密码</div>
-                <div class="tool-action">打开 <span>↗</span></div>
+            <a href="https://volade.com/zh/mima-shengchengqi.html" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico">🔑</span>
+                <span>密码生成器</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="https://markdownreader.jqshengtian.top" class="tool-card" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">📝</div>
-                <div class="tool-name">Markdown 预览</div>
-                <div class="tool-desc">实时渲染 Markdown</div>
-                <div class="tool-action">打开 <span>↗</span></div>
+            <a href="https://markdownreader.jqshengtian.top" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico">📝</span>
+                <span>Markdown 预览</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="https://www.hulianqr.com/" class="tool-card" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">📱</div>
-                <div class="tool-name">二维码生成</div>
-                <div class="tool-desc">输入文本或链接生成二维码</div>
-                <div class="tool-action">打开 <span>↗</span></div>
+            <a href="https://www.hulianqr.com/" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico">📱</span>
+                <span>二维码生成</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="https://nbtools.cn/unit-converter/" class="tool-card" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">📏</div>
-                <div class="tool-name">单位换算</div>
-                <div class="tool-desc">长度、重量、温度等转换</div>
-                <div class="tool-action">打开 <span>↗</span></div>
+            <a href="https://nbtools.cn/unit-converter/" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico">📏</span>
+                <span>单位换算</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="https://regex101.com/" class="tool-card" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">🔍</div>
-                <div class="tool-name">正则表达式测试</div>
-                <div class="tool-desc">实时匹配高亮与替换</div>
-                <div class="tool-action">打开 <span>↗</span></div>
+            <a href="https://regex101.com/" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico">🔍</span>
+                <span>正则表达式测试</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="https://www.w3cschool.cn/tools/index?name=urlencode" class="tool-card" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">🌐</div>
-                <div class="tool-name">URL 编码/解码</div>
-                <div class="tool-desc">URL 参数编码解码</div>
-                <div class="tool-action">打开 <span>↗</span></div>
+            <a href="https://www.w3cschool.cn/tools/index?name=urlencode" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico">🌐</span>
+                <span>URL 编码/解码</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="https://qilingtools.com/zh/math/random" class="tool-card" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">🎲</div>
-                <div class="tool-name">随机数生成</div>
-                <div class="tool-desc">生成随机数字或序列</div>
-                <div class="tool-action">打开 <span>↗</span></div>
+            <a href="https://qilingtools.com/zh/math/random" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico">🎲</span>
+                <span>随机数生成</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="https://text-differ.com/" class="tool-card" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">🆚</div>
-                <div class="tool-name">文本差异对比</div>
-                <div class="tool-desc">逐行对比两段文本</div>
-                <div class="tool-action">打开 <span>↗</span></div>
+            <a href="https://text-differ.com/" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico">🆚</span>
+                <span>文本差异对比</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <!-- 新增空卡片（占位，链接先放 #，等你想好跳哪里直接改 href 即可） -->
-            <a href="#" class="tool-card empty" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">➕</div>
-                <div class="tool-name">待添加</div>
-                <div class="tool-desc">点击跳转到指定页面</div>
-                <div class="tool-action">前往 <span>↗</span></div>
+            <!-- 空占位链接，想好跳哪里后把 javascript:void(0) 换成实际网址即可 -->
+            <a href="javascript:void(0)" class="link-item empty">
+                <span class="ico">➕</span>
+                <span>待添加</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="#" class="tool-card empty" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">➕</div>
-                <div class="tool-name">待添加</div>
-                <div class="tool-desc">点击跳转到指定页面</div>
-                <div class="tool-action">前往 <span>↗</span></div>
+            <a href="javascript:void(0)" class="link-item empty">
+                <span class="ico">➕</span>
+                <span>待添加</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="#" class="tool-card empty" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">➕</div>
-                <div class="tool-name">待添加</div>
-                <div class="tool-desc">点击跳转到指定页面</div>
-                <div class="tool-action">前往 <span>↗</span></div>
+            <a href="javascript:void(0)" class="link-item empty">
+                <span class="ico">➕</span>
+                <span>待添加</span>
+                <span class="arrow">↗</span>
             </a>
 
-            <a href="#" class="tool-card empty" target="_blank" rel="noopener noreferrer">
-                <div class="tool-icon">➕</div>
-                <div class="tool-name">待添加</div>
-                <div class="tool-desc">点击跳转到指定页面</div>
-                <div class="tool-action">前往 <span>↗</span></div>
+            <a href="javascript:void(0)" class="link-item empty">
+                <span class="ico">➕</span>
+                <span>待添加</span>
+                <span class="arrow">↗</span>
             </a>
         </div>
+    </div>
 
-        <div class="footer-note">
-            ⚡ 点击卡片使用工具 · 空白卡片可自定义跳转
-        </div>
+    <div class="footer-note">
+        如有疑问 请联系冷涩调本人或管理员进行反馈哦
     </div>
 </body>
 </html>
