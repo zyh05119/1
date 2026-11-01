@@ -18,6 +18,7 @@
             opacity: 0;
             animation: fadeInPage 0.8s ease forwards;
             transition: background-color 0.4s ease, color 0.3s ease;
+            overflow-x: hidden;
         }
 
         body.light-mode {
@@ -234,6 +235,7 @@
         .footer-note a:hover { color: #93c5fd; border-bottom-color: #93c5fd; }
         body.light-mode .footer-note a:hover { color: #9c7a3a; border-bottom-color: #9c7a3a; }
 
+        /* ===== 主题切换 ===== */
         .theme-toggle {
             position: fixed;
             top: 16px;
@@ -270,6 +272,7 @@
             color: #a8863a;
         }
 
+        /* ===== 天气 ===== */
         .weather-corner {
             position: fixed;
             bottom: 20px;
@@ -310,6 +313,124 @@
             text-overflow: ellipsis;
         }
 
+        /* ===== 通用弹窗 ===== */
+        .toast-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.25s ease;
+        }
+        .toast-overlay.show { display: flex; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+
+        .toast-box {
+            background: rgba(10, 18, 20, 0.95);
+            border: 1px solid rgba(60, 110, 120, 0.15);
+            border-radius: 24px;
+            padding: 32px 36px 28px;
+            max-width: 340px;
+            width: 85%;
+            text-align: center;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+            animation: scaleIn 0.25s ease;
+        }
+        body.light-mode .toast-box {
+            background: rgba(255, 250, 240, 0.98);
+            border-color: rgba(180, 150, 100, 0.3);
+        }
+
+        .toast-box .emoji {
+            font-size: 2.8rem;
+            display: block;
+            margin-bottom: 12px;
+        }
+        .toast-box .title {
+            font-size: 1.1rem;
+            color: #8aa8ac;
+            letter-spacing: 1px;
+            font-weight: 400;
+            margin-bottom: 6px;
+        }
+        body.light-mode .toast-box .title { color: #4a6a6f; }
+        .toast-box .msg {
+            font-size: 0.9rem;
+            color: rgba(150, 180, 190, 0.75);
+            letter-spacing: 0.5px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+        body.light-mode .toast-box .msg { color: #6a5a48; }
+
+        .toast-box .btn-close {
+            background: rgba(60, 110, 120, 0.08);
+            border: 1px solid rgba(60, 110, 120, 0.15);
+            border-radius: 12px;
+            padding: 10px 32px;
+            color: #c8d8dc;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 300;
+        }
+        .toast-box .btn-close:hover {
+            background: rgba(60, 110, 120, 0.15);
+            color: #fff;
+        }
+        body.light-mode .toast-box .btn-close {
+            background: rgba(180, 150, 100, 0.1);
+            border-color: rgba(180, 150, 100, 0.25);
+            color: #6a5a48;
+        }
+        body.light-mode .toast-box .btn-close:hover {
+            background: rgba(180, 150, 100, 0.2);
+        }
+
+        /* ===== 鼠标跟随光点 ===== */
+        .cursor-dot {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.35);
+            box-shadow: 0 0 14px 3px rgba(59, 130, 246, 0.25);
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.4s ease, transform 0.15s ease;
+            opacity: 0;
+        }
+        body.light-mode .cursor-dot {
+            background: rgba(184, 144, 74, 0.4);
+            box-shadow: 0 0 14px 3px rgba(184, 144, 74, 0.25);
+        }
+
+        /* ===== 点击星星 ===== */
+        .click-star {
+            position: fixed;
+            pointer-events: none;
+            font-size: 1rem;
+            z-index: 9999;
+            user-select: none;
+            animation: starFloat 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes starFloat {
+            0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -180%) scale(1.6); }
+        }
+
         @media (max-width: 600px) {
             .hero { min-height: 35vh; padding: 0 1.25rem; }
             .hero h1 { font-size: 1.9rem; }
@@ -323,6 +444,9 @@
             .link-item { padding: 0.5rem 0.7rem; font-size: 0.78rem; }
             .theme-toggle { top: 12px; right: 12px; width: 32px; height: 32px; font-size: 0.8rem; }
             .weather-corner { bottom: 14px; right: 14px; padding: 5px 12px 5px 10px; font-size: 0.68rem; }
+            .toast-box { padding: 26px 22px 22px; }
+            .toast-box .emoji { font-size: 2.4rem; }
+            .cursor-dot { display: none; } /* 触屏设备不需要 */
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -335,6 +459,8 @@
             .link-item { transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
             .link-item:hover { transform: none; }
             .link-item:active { transform: none; }
+            .cursor-dot { display: none; }
+            .click-star { animation: none !important; opacity: 0 !important; }
         }
     </style>
 </head>
@@ -357,15 +483,31 @@
 
     <div class="links-section">
         <div class="links-grid">
+            <!-- 工具 -->
             <a href="https://base64.shuttlelab.org/" class="link-item" target="_blank" rel="noopener noreferrer">
                 <span class="ico" aria-hidden="true">🔐</span>
                 <span>Base64 编解码</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </a>
 
+            <!-- 系统报错 -->
             <a href="feedback.html#bug" class="link-item" target="_blank" rel="noopener noreferrer">
                 <span class="ico" aria-hidden="true">🐛</span>
                 <span>系统报错</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+
+            <!-- 3. 今日运势 -->
+            <a href="javascript:void(0)" class="link-item" id="fortuneBtn">
+                <span class="ico" aria-hidden="true">🔮</span>
+                <span>今日运势</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+
+            <!-- 5. 一键写完作业（假的） -->
+            <a href="javascript:void(0)" class="link-item" id="homeworkBtn">
+                <span class="ico" aria-hidden="true">🚀</span>
+                <span>一键写完作业</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </a>
         </div>
@@ -375,56 +517,51 @@
         如有疑问 请联系 <a href="about.html" target="_blank" rel="noopener noreferrer">冷涩调</a> 本人或管理员进行反馈哦
     </div>
 
+    <!-- 通用弹窗 -->
+    <div class="toast-overlay" id="toastOverlay">
+        <div class="toast-box">
+            <span class="emoji" id="toastEmoji">🔮</span>
+            <div class="title" id="toastTitle">今日运势</div>
+            <div class="msg" id="toastMsg">…</div>
+            <button class="btn-close" id="toastCloseBtn">知道了</button>
+        </div>
+    </div>
+
     <script>
     (function () {
         'use strict';
 
-        console.log('[冷涩调] script loaded');
-
         /* ================= 主题切换 ================= */
         var toggleBtn = document.getElementById('themeToggle');
-        if (!toggleBtn) {
-            console.warn('[冷涩调] themeToggle 元素没找到');
-        } else {
-            var isLight = localStorage.getItem('theme') === 'light';
+        var isLight = localStorage.getItem('theme') === 'light';
+        if (isLight) {
+            document.body.classList.add('light-mode');
+            toggleBtn.textContent = '☀';
+        }
+        toggleBtn.addEventListener('click', function () {
+            isLight = !isLight;
             if (isLight) {
                 document.body.classList.add('light-mode');
                 toggleBtn.textContent = '☀';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.remove('light-mode');
+                toggleBtn.textContent = '✦';
+                localStorage.setItem('theme', 'dark');
             }
+        });
 
-            toggleBtn.addEventListener('click', function () {
-                isLight = !isLight;
-                if (isLight) {
-                    document.body.classList.add('light-mode');
-                    toggleBtn.textContent = '☀';
-                    localStorage.setItem('theme', 'light');
-                } else {
-                    document.body.classList.remove('light-mode');
-                    toggleBtn.textContent = '✦';
-                    localStorage.setItem('theme', 'dark');
-                }
-            });
-        }
-
-        /* ================= 天气（容错版） ================= */
+        /* ================= 天气 ================= */
         function getWeather() {
             var tempEl = document.getElementById('weatherTemp');
             var cityEl = document.getElementById('weatherCity');
             var iconEl = document.getElementById('weatherIcon');
+            if (!tempEl || !cityEl || !iconEl) return;
 
-            if (!tempEl || !cityEl || !iconEl) {
-                console.warn('[冷涩调] 天气 DOM 元素缺失');
-                return;
-            }
+            var controller = new AbortController();
+            var timeoutId = setTimeout(function () { controller.abort(); }, 6000);
 
-            var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
-            var timeoutId = setTimeout(function () {
-                if (controller) controller.abort();
-            }, 6000);
-
-            var opts = controller ? { signal: controller.signal } : {};
-
-            fetch('https://wttr.in?format=j1&lang=zh', opts)
+            fetch('https://wttr.in?format=j1&lang=zh', { signal: controller.signal })
                 .then(function (res) {
                     clearTimeout(timeoutId);
                     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -433,13 +570,11 @@
                 .then(function (data) {
                     var current = data.current_condition && data.current_condition[0];
                     if (!current) return;
-
                     var temp = current.temp_C;
                     var code = current.weatherCode;
                     var city = (data.nearest_area && data.nearest_area[0] &&
                                 data.nearest_area[0].areaName &&
                                 data.nearest_area[0].areaName[0].value) || '--';
-
                     var iconMap = {
                         '113': '☀️', '116': '🌤', '119': '⛅', '122': '☁️',
                         '143': '🌫', '176': '🌦', '179': '🌨', '182': '🌧',
@@ -454,24 +589,101 @@
                         '368': '🌨', '371': '🌨', '374': '🌧', '377': '🌧',
                         '386': '⛈', '389': '⛈', '392': '🌨', '395': '❄️'
                     };
-
                     iconEl.textContent = iconMap[code] || '🌤';
                     tempEl.textContent = temp + '°';
                     cityEl.textContent = city.length > 6 ? city.slice(0, 6) : city;
-                    console.log('[冷涩调] 天气已加载：', temp + '°', city);
                 })
-                .catch(function (err) {
-                    clearTimeout(timeoutId);
-                    // 天气失败不影响页面，静默处理
-                    console.info('[冷涩调] 天气获取失败（不影响使用）：', err.message);
-                });
+                .catch(function () { clearTimeout(timeoutId); });
         }
         getWeather();
+
+        /* ================= 通用弹窗 ================= */
+        var overlay = document.getElementById('toastOverlay');
+        var toastEmoji = document.getElementById('toastEmoji');
+        var toastTitle = document.getElementById('toastTitle');
+        var toastMsg = document.getElementById('toastMsg');
+        var toastCloseBtn = document.getElementById('toastCloseBtn');
+
+        function showToast(emoji, title, msg) {
+            toastEmoji.textContent = emoji;
+            toastTitle.textContent = title;
+            toastMsg.textContent = msg;
+            overlay.classList.add('show');
+        }
+        function hideToast() { overlay.classList.remove('show'); }
+
+        toastCloseBtn.addEventListener('click', hideToast);
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) hideToast();
+        });
+
+        /* ================= 3. 今日运势 ================= */
+        var fortunes = [
+            { emoji: '🌟', title: '大吉', msg: '今天适合摸鱼，作业会自己写完的。' },
+            { emoji: '✨', title: '中吉', msg: '老师今天心情不错，可以试试问问题。' },
+            { emoji: '🍀', title: '小吉', msg: '会有人请你喝奶茶（大概）。' },
+            { emoji: '🌙', title: '平', msg: '普普通通的一天，耍起就完了。' },
+            { emoji: '🌧', title: '小凶', msg: '别忘带作业，真的。' },
+            { emoji: '💀', title: '大凶', msg: '建议请假，或者装病。' },
+            { emoji: '🎁', title: '惊喜', msg: '今天会有好事发生，信我。' }
+        ];
+
+        document.getElementById('fortuneBtn').addEventListener('click', function (e) {
+            e.preventDefault();
+            // 用日期做种子，同一天结果固定
+            var d = new Date();
+            var seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+            var idx = seed % fortunes.length;
+            var f = fortunes[idx];
+            showToast(f.emoji, '今日运势 · ' + f.title, f.msg);
+        });
+
+        /* ================= 5. 一键写完作业（假的） ================= */
+        document.getElementById('homeworkBtn').addEventListener('click', function (e) {
+            e.preventDefault();
+            showToast('😂', '启动失败', '作业引擎正在开发中……（这波贪了）');
+        });
+
+        /* ================= 6. 鼠标跟随光点 ================= */
+        var dot = document.createElement('div');
+        dot.className = 'cursor-dot';
+        document.body.appendChild(dot);
+
+        var hasPointer = window.matchMedia('(pointer: fine)').matches;
+        if (hasPointer) {
+            document.addEventListener('mousemove', function (e) {
+                dot.style.left = e.clientX + 'px';
+                dot.style.top = e.clientY + 'px';
+                dot.style.opacity = '1';
+            });
+            document.addEventListener('mouseleave', function () {
+                dot.style.opacity = '0';
+            });
+        } else {
+            dot.style.display = 'none';
+        }
+
+        /* ================= 7. 点击爆星星 ================= */
+        var starChars = ['✨', '⭐', '💫', '🌟', '✦'];
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        document.addEventListener('click', function (e) {
+            if (reduceMotion) return;
+            // 点在卡片或按钮上不触发，避免干扰
+            if (e.target.closest('a, button, input, textarea')) return;
+
+            var star = document.createElement('span');
+            star.className = 'click-star';
+            star.textContent = starChars[Math.floor(Math.random() * starChars.length)];
+            star.style.left = e.clientX + 'px';
+            star.style.top = e.clientY + 'px';
+            document.body.appendChild(star);
+            setTimeout(function () { star.remove(); }, 900);
+        });
 
         /* ================= 卡片入场 ================= */
         var items  = Array.prototype.slice.call(document.querySelectorAll('.link-item'));
         var footer = document.querySelector('.footer-note');
-        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         items.forEach(function (el, i) {
             el.style.setProperty('--delay', (i * 0.05) + 's');
