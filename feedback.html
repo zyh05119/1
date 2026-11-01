@@ -24,7 +24,6 @@
             color: #3a3528;
         }
 
-        /* 粒子背景 */
         body::after {
             content: '';
             position: fixed;
@@ -255,7 +254,7 @@
         <a href="index.html" class="back">← 返回工具集</a>
 
         <h1>反馈与联系</h1>
-        <p class="sub">问题？建议？聊天？</p>
+        <p class="sub">问题？建议？聊天？都可以</p>
 
         <div class="section" id="bug">
             <h2>报告问题</h2>
@@ -270,7 +269,7 @@
             <p>
                 想要什么新东西？觉得可以做得更好？
                 email <a href="mailto:zyh0197@gmail.com">zyh0197@gmail.com</a>，
-                或者加 whatsapp<strong>81790196</strong>
+                或者加 whatsapp <strong>81790196</strong>，我会认真看。
             </p>
         </div>
 
@@ -393,90 +392,6 @@
                 }
             });
         }
-    })();
-    </script>
-</body>
-</html>
-        @media (max-width: 600px) {
-            body { padding: 2rem 1.25rem; }
-            h1 { font-size: 1.8rem; }
-        }
-    </style>
-</head>
-<body>
-    <div class="wrap">
-        <a href="index.html" class="back">← 返回工具集</a>
-
-        <h1>反馈与联系</h1>
-        <p class="sub">问题？建议？聊天？都可以</p>
-
-        <!-- ===== 报告问题（首页 #bug 直达） ===== -->
-        <div class="section" id="bug">
-            <h2>报告问题</h2>
-            <p>
-                链接打不开、功能异常、页面显示错乱？<br>
-                email<a href="mailto:zyh0197@gmail.com">zyh0197@gmail.com</a> 即可。
-            </p>
-        </div>
-
-        <!-- ===== 工具建议（首页 #suggest 直达） ===== -->
-        <div class="section" id="suggest">
-            <h2>工具建议</h2>
-            <p>
-                想要什么新东西？觉得可以做得更好？
-                <a href="mailto:zyh0197@gmail.com">zyh0197@gmail.com</a>，
-                或者加 whatsapp <strong>81790196</strong>，我会认真看。
-            </p>
-        </div>
-
-        <div class="divider-line"></div>
-
-        <!-- ===== 联系方式（首页 #feedback 直达） ===== -->
-        <div class="section" id="feedback">
-            <h2>contact</h2>
-            <ul class="contact-list">
-                <li>
-                    <a href="mailto:zyh0197@gmail.com">
-                        <span aria-hidden="true">📧</span> zyh0197@gmail.com
-                    </a>
-                </li>
-                <li>
-                    <a href="https://github.com/Zain-1919" target="_blank" rel="noopener noreferrer">
-                        <span aria-hidden="true">🐙</span> Zain-1919
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)" id="qq-copy" title="点击复制 QQ 号">
-                        <span aria-hidden="true">💬</span> 81790196
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <div class="footer-note">
-            天天开心 大家
-        </div>
-    </div>
-
-    <script>
-    (function () {
-        var qq = document.getElementById('qq-copy');
-        if (!qq) return;
-        qq.addEventListener('click', function (e) {
-            e.preventDefault();
-            var num = '81790196';
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(num).then(function () {
-                    var old = qq.textContent;
-                    qq.textContent = '💬 已复制！';
-                    setTimeout(function () { qq.textContent = old; }, 1200);
-                }).catch(function () {
-                    alert('QQ：' + num);
-                });
-            } else {
-                alert('QQ：' + num);
-            }
-        });
     })();
     </script>
 </body>
