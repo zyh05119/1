@@ -149,16 +149,16 @@
             border-radius: 8px;
             text-decoration: none;
             color: #d4d4d8;
+            font-family: inherit;
             font-size: 0.85rem;
             font-weight: 500;
-            font-family: inherit;
             text-align: left;
             cursor: pointer;
+            width: 100%;
+            min-width: 0;
             transition: background 0.15s ease, border-color 0.15s ease,
                         color 0.15s ease, transform 0.15s ease;
-            white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis;
             opacity: 0;
         }
         body.light-mode .link-item {
@@ -199,6 +199,13 @@
             opacity: 0.85;
         }
 
+        .link-item .label {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         .link-item .arrow {
             margin-left: auto;
             font-size: 0.75rem;
@@ -208,12 +215,13 @@
             flex-shrink: 0;
         }
         body.light-mode .link-item .arrow { color: #c9a86a; }
-        .link-item:hover .arrow { opacity: 1; }
+        .link-item:hover .arrow,
+        .link-item:focus-visible .arrow { opacity: 1; }
 
         .footer-note {
             text-align: center;
             font-size: 0.7rem;
-            color: #3f3f46;
+            color: #71717a;
             padding: 1.5rem 1rem 2rem;
             letter-spacing: 0.5px;
             opacity: 0;
@@ -221,7 +229,7 @@
             z-index: 1;
             transition: color 0.3s ease;
         }
-        body.light-mode .footer-note { color: #a89b82; }
+        body.light-mode .footer-note { color: #8a7f68; }
 
         .footer-note.is-visible {
             animation: cardIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
@@ -269,6 +277,7 @@
             box-shadow: 0 0 20px rgba(200, 180, 80, 0.06);
         }
         .theme-toggle:active { transform: scale(0.92); }
+        .theme-toggle:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
         body.light-mode .theme-toggle {
             background: rgba(255, 250, 240, 0.8);
             border-color: rgba(180, 150, 100, 0.25);
@@ -391,6 +400,7 @@
             background: rgba(60, 110, 120, 0.15);
             color: #fff;
         }
+        .toast-box .btn-close:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
         body.light-mode .toast-box .btn-close {
             background: rgba(180, 150, 100, 0.1);
             border-color: rgba(180, 150, 100, 0.25);
@@ -443,21 +453,6 @@
             }
         }
 
-        /* ===== 点击爆星星 ===== */
-        .click-star {
-            position: fixed;
-            pointer-events: none;
-            font-size: 1rem;
-            z-index: 9999;
-            user-select: none;
-            animation: starFloat 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-
-        @keyframes starFloat {
-            0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, -180%) scale(1.6); }
-        }
-
         @media (max-width: 600px) {
             .hero { min-height: 35vh; padding: 0 1.25rem; }
             .hero h1 { font-size: 1.9rem; }
@@ -489,15 +484,14 @@
             .link-item:active { transform: none; }
             .cursor-dot { display: none; }
             .star-trail { display: none !important; }
-            .click-star { animation: none !important; opacity: 0 !important; }
         }
     </style>
 </head>
 <body>
 
-    <button class="theme-toggle" id="themeToggle" aria-label="切换黑白模式">✦</button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换黑白模式">✦</button>
 
-    <div class="weather-corner" id="weatherCorner">
+    <div class="weather-corner" id="weatherCorner" aria-hidden="true">
         <span class="w-icon" id="weatherIcon">🌤</span>
         <span class="w-temp" id="weatherTemp">--°</span>
         <span class="w-city" id="weatherCity">--</span>
@@ -512,47 +506,47 @@
 
     <div class="links-section">
         <div class="links-grid">
-            <!-- 工具 -->
+            <!-- 工具(外部站点,新标签打开) -->
             <a href="https://base64.shuttlelab.org/" class="link-item" target="_blank" rel="noopener noreferrer">
                 <span class="ico" aria-hidden="true">🔐</span>
-                <span>Base64 编解码</span>
+                <span class="label">Base64 编解码</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </a>
 
-            <!-- 系统报错 -->
-            <a href="feedback.html#bug" class="link-item" target="_blank" rel="noopener noreferrer">
+            <!-- 系统报错(站内页面,当前标签打开) -->
+            <a href="feedback.html#bug" class="link-item">
                 <span class="ico" aria-hidden="true">🐛</span>
-                <span>系统报错</span>
-                <span class="arrow" aria-hidden="true">↗</span>
+                <span class="label">系统报错</span>
+                <span class="arrow" aria-hidden="true">→</span>
             </a>
 
             <!-- 今日运势 -->
             <button type="button" class="link-item" id="fortuneBtn">
                 <span class="ico" aria-hidden="true">🔮</span>
-                <span>今日运势</span>
+                <span class="label">今日运势</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </button>
 
-            <!-- 一键写完作业（假的） -->
+            <!-- 一键写完作业(假的) -->
             <button type="button" class="link-item" id="homeworkBtn">
                 <span class="ico" aria-hidden="true">🚀</span>
-                <span>一键写完作业</span>
+                <span class="label">一键写完作业</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </button>
         </div>
     </div>
 
     <div class="footer-note">
-        如有疑问 请联系 <a href="about.html" target="_blank" rel="noopener noreferrer">冷涩调</a> 本人或管理员进行反馈哦
+        如有疑问 请联系 <a href="about.html">冷涩调</a> 本人或管理员进行反馈哦
     </div>
 
     <!-- 通用弹窗 -->
     <div class="toast-overlay" id="toastOverlay">
-        <div class="toast-box">
-            <span class="emoji" id="toastEmoji">🔮</span>
+        <div class="toast-box" role="dialog" aria-modal="true" aria-labelledby="toastTitle">
+            <span class="emoji" id="toastEmoji" aria-hidden="true">🔮</span>
             <div class="title" id="toastTitle">今日运势</div>
             <div class="msg" id="toastMsg">…</div>
-            <button class="btn-close" id="toastCloseBtn">知道了</button>
+            <button type="button" class="btn-close" id="toastCloseBtn">知道了</button>
         </div>
     </div>
 
@@ -560,9 +554,21 @@
     (function () {
         'use strict';
 
+        /* 全局只声明一次,供下方所有模块使用 */
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var hasPointer = window.matchMedia('(pointer: fine)').matches;
+
+        /* localStorage 在隐私模式下可能抛错,统一包一层 */
+        function safeGet(key) {
+            try { return localStorage.getItem(key); } catch (e) { return null; }
+        }
+        function safeSet(key, val) {
+            try { localStorage.setItem(key, val); } catch (e) {}
+        }
+
         /* ================= 主题切换 ================= */
         var toggleBtn = document.getElementById('themeToggle');
-        var isLight = localStorage.getItem('theme') === 'light';
+        var isLight = safeGet('theme') === 'light';
         if (isLight) {
             document.body.classList.add('light-mode');
             toggleBtn.textContent = '☀';
@@ -572,15 +578,17 @@
             if (isLight) {
                 document.body.classList.add('light-mode');
                 toggleBtn.textContent = '☀';
-                localStorage.setItem('theme', 'light');
+                safeSet('theme', 'light');
             } else {
                 document.body.classList.remove('light-mode');
                 toggleBtn.textContent = '✦';
-                localStorage.setItem('theme', 'dark');
+                safeSet('theme', 'dark');
             }
         });
 
-        /* ================= 天气 ================= */
+        /* ================= 天气 =================
+           注意:wttr.in 按访问者 IP 定位,会把 IP 发给第三方,
+           且在部分地区定位可能不准。失败时静默忽略。 */
         function getWeather() {
             var tempEl = document.getElementById('weatherTemp');
             var cityEl = document.getElementById('weatherCity');
@@ -632,18 +640,27 @@
         var toastTitle = document.getElementById('toastTitle');
         var toastMsg = document.getElementById('toastMsg');
         var toastCloseBtn = document.getElementById('toastCloseBtn');
+        var lastFocused = null;
 
         function showToast(emoji, title, msg) {
+            lastFocused = document.activeElement;
             toastEmoji.textContent = emoji;
             toastTitle.textContent = title;
             toastMsg.textContent = msg;
             overlay.classList.add('show');
+            toastCloseBtn.focus();
         }
-        function hideToast() { overlay.classList.remove('show'); }
+        function hideToast() {
+            overlay.classList.remove('show');
+            if (lastFocused && lastFocused.focus) lastFocused.focus();
+        }
 
         toastCloseBtn.addEventListener('click', hideToast);
         overlay.addEventListener('click', function (e) {
             if (e.target === overlay) hideToast();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && overlay.classList.contains('show')) hideToast();
         });
 
         /* ================= 今日运势 ================= */
@@ -657,19 +674,15 @@
             { emoji: '🎁', title: '惊喜', msg: '今天会有好事发生，信我。' }
         ];
 
-        document.getElementById('fortuneBtn').addEventListener('click', function (e) {
-            e.preventDefault();
-            // 用日期做种子，同一天结果固定
+        document.getElementById('fortuneBtn').addEventListener('click', function () {
             var d = new Date();
             var seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
-            var idx = seed % fortunes.length;
-            var f = fortunes[idx];
+            var f = fortunes[seed % fortunes.length];
             showToast(f.emoji, '今日运势 · ' + f.title, f.msg);
         });
 
         /* ================= 一键写完作业（假的） ================= */
-        document.getElementById('homeworkBtn').addEventListener('click', function (e) {
-            e.preventDefault();
+        document.getElementById('homeworkBtn').addEventListener('click', function () {
             showToast('🚀', '启动失败', '作业引擎正在开发中……（其实永远不会开发）');
         });
 
@@ -678,26 +691,22 @@
         dot.className = 'cursor-dot';
         document.body.appendChild(dot);
 
-        var hasPointer = window.matchMedia('(pointer: fine)').matches;
-        if (hasPointer) {
+        if (hasPointer && !reduceMotion) {
             document.addEventListener('mousemove', function (e) {
                 dot.style.left = e.clientX + 'px';
                 dot.style.top = e.clientY + 'px';
                 dot.style.opacity = '1';
             });
-            document.addEventListener('mouseleave', function () {
+            document.documentElement.addEventListener('mouseleave', function () {
                 dot.style.opacity = '0';
             });
         } else {
             dot.style.display = 'none';
         }
 
-        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
         /* ================= 长按鼠标 → 连续爆星星拖尾 ================= */
         (function () {
-            if (reduceMotion) return;
-            if (!hasPointer) return;
+            if (reduceMotion || !hasPointer) return;
 
             var starChars = ['✦', '✧', '★', '✶', '✷', '✨', '⭐', '💫', '🌟'];
 
@@ -763,54 +772,48 @@
                 }
             });
 
-            document.addEventListener('mouseleave', function () {
+            document.documentElement.addEventListener('mouseleave', function () {
                 isDown = false;
             });
         })();
-
-        /* ================= 点击爆星星 ================= */
-        var clickStarChars = ['✨', '⭐', '💫', '🌟', '✦'];
-
-        document.addEventListener('click', function (e) {
-            if (reduceMotion) return;
-            // 点在卡片或按钮上不触发，避免干扰
-            if (e.target.closest('a, button, input, textarea')) return;
-
-            var star = document.createElement('span');
-            star.className = 'click-star';
-            star.textContent = clickStarChars[Math.floor(Math.random() * clickStarChars.length)];
-            star.style.left = e.clientX + 'px';
-            star.style.top = e.clientY + 'px';
-            document.body.appendChild(star);
-            setTimeout(function () { star.remove(); }, 900);
-        });
 
         /* ================= 卡片入场 ================= */
         var items  = Array.prototype.slice.call(document.querySelectorAll('.link-item'));
         var footer = document.querySelector('.footer-note');
 
-        items.forEach(function (el, i) {        items.forEach(function (el, i) {
-            el.style.setProperty('--delay', (i * 0.06) + 's');
+        items.forEach(function (el, i) {
+            el.style.setProperty('--delay', (i * 0.05) + 's');
         });
 
-        if ('IntersectionObserver' in window) {
-            var io = new IntersectionObserver(function (entries) {
+        function reveal(el) { el.classList.add('is-visible'); }
+
+        if (reduceMotion || !('IntersectionObserver' in window)) {
+            items.forEach(reveal);
+            if (footer) reveal(footer);
+        } else {
+            var io = new IntersectionObserver(function (entries, observer) {
                 entries.forEach(function (entry) {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        io.unobserve(entry.target);
+                        reveal(entry.target);
+                        observer.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.1 });
-
+            }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
             items.forEach(function (el) { io.observe(el); });
-            if (footer) io.observe(footer);
-        } else {
-            items.forEach(function (el) { el.classList.add('is-visible'); });
-            if (footer) footer.classList.add('is-visible');
-        }
 
+            if (footer) {
+                var footerIO = new IntersectionObserver(function (entries, observer) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            reveal(entry.target);
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                footerIO.observe(footer);
+            }
+        }
     })();
     </script>
 </body>
-</html>  
+</html>
