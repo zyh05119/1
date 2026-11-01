@@ -410,6 +410,66 @@
             background: rgba(180, 150, 100, 0.2);
         }
 
+        /* ===== 倒计时设置 ===== */
+        .cd-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .cd-form input {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(60, 110, 120, 0.2);
+            background: rgba(60, 110, 120, 0.06);
+            color: #c8d8dc;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color-scheme: dark;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .cd-form input:focus { border-color: #3b82f6; }
+        body.light-mode .cd-form input {
+            border-color: rgba(180, 150, 100, 0.3);
+            background: rgba(180, 150, 100, 0.08);
+            color: #4a4232;
+            color-scheme: light;
+        }
+        body.light-mode .cd-form input:focus { border-color: #c9a86a; }
+        .cd-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        .cd-actions .btn-close {
+            flex: 1;
+            padding: 10px 14px;
+            letter-spacing: 1px;
+        }
+
+        /* ===== 随机数设置 ===== */
+        .rn-result {
+            font-size: 2.4rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: #c8d8dc;
+            margin-bottom: 6px;
+            min-height: 2.9rem;
+            word-break: break-all;
+        }
+        body.light-mode .rn-result { color: #4a4232; }
+        .cd-form .rn-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(150, 180, 190, 0.75);
+            font-size: 0.85rem;
+        }
+        body.light-mode .cd-form .rn-row { color: #6a5a48; }
+        .cd-form .rn-row input { flex: 1; min-width: 0; text-align: center; }
+
         /* ===== 鼠标跟随光点 ===== */
         .cursor-dot {
             position: fixed;
@@ -513,6 +573,31 @@
                 <span class="arrow" aria-hidden="true">↗</span>
             </a>
 
+            <!-- 学习与放松 -->
+            <a href="https://zh.wikipedia.org/" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico" aria-hidden="true">📚</span>
+                <span class="label">维基百科</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+
+            <a href="https://www.bilibili.com/" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico" aria-hidden="true">📺</span>
+                <span class="label">哔哩哔哩</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+
+            <a href="https://www.zhihu.com/" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico" aria-hidden="true">💡</span>
+                <span class="label">知乎</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+
+            <a href="https://www.youtube.com/" class="link-item" target="_blank" rel="noopener noreferrer">
+                <span class="ico" aria-hidden="true">▶️</span>
+                <span class="label">YouTube</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+
             <!-- 系统报错(站内页面,当前标签打开) -->
             <a href="feedback.html#bug" class="link-item">
                 <span class="ico" aria-hidden="true">🐛</span>
@@ -524,6 +609,41 @@
             <button type="button" class="link-item" id="fortuneBtn">
                 <span class="ico" aria-hidden="true">🔮</span>
                 <span class="label">今日运势</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </button>
+
+            <!-- 今天吃什么 -->
+            <button type="button" class="link-item" id="foodBtn">
+                <span class="ico" aria-hidden="true">🍜</span>
+                <span class="label">今天吃什么</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </button>
+
+            <!-- 掷骰子 -->
+            <button type="button" class="link-item" id="diceBtn">
+                <span class="ico" aria-hidden="true">🎲</span>
+                <span class="label">掷骰子</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </button>
+
+            <!-- 抛硬币 -->
+            <button type="button" class="link-item" id="coinBtn">
+                <span class="ico" aria-hidden="true">🪙</span>
+                <span class="label">抛硬币</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </button>
+
+            <!-- 随机数 -->
+            <button type="button" class="link-item" id="randomBtn">
+                <span class="ico" aria-hidden="true">🔢</span>
+                <span class="label">随机数</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </button>
+
+            <!-- 倒计时 -->
+            <button type="button" class="link-item" id="countdownBtn">
+                <span class="ico" aria-hidden="true">⏳</span>
+                <span class="label">倒计时</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </button>
 
@@ -547,6 +667,45 @@
             <div class="title" id="toastTitle">今日运势</div>
             <div class="msg" id="toastMsg">…</div>
             <button type="button" class="btn-close" id="toastCloseBtn">知道了</button>
+        </div>
+    </div>
+
+    <!-- 随机数设置弹窗 -->
+    <div class="toast-overlay" id="rnOverlay">
+        <div class="toast-box" role="dialog" aria-modal="true" aria-labelledby="rnTitle">
+            <span class="emoji" aria-hidden="true">🔢</span>
+            <div class="title" id="rnTitle">随机数</div>
+            <div class="rn-result" id="rnResult" aria-live="polite">?</div>
+            <div class="msg" id="rnHint">范围 1 到 100</div>
+            <div class="cd-form">
+                <div class="rn-row">
+                    <input type="number" id="rnMin" step="1" inputmode="numeric" aria-label="最小值" placeholder="最小值">
+                    <span>到</span>
+                    <input type="number" id="rnMax" step="1" inputmode="numeric" aria-label="最大值" placeholder="最大值">
+                </div>
+            </div>
+            <div class="cd-actions">
+                <button type="button" class="btn-close" id="rnGo">生成</button>
+                <button type="button" class="btn-close" id="rnClose">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 倒计时设置弹窗 -->
+    <div class="toast-overlay" id="cdOverlay">
+        <div class="toast-box" role="dialog" aria-modal="true" aria-labelledby="cdTitle">
+            <span class="emoji" aria-hidden="true">⏳</span>
+            <div class="title" id="cdTitle">倒计时</div>
+            <div class="msg" id="cdResult">还没有设置目标日期</div>
+            <div class="cd-form">
+                <input type="text" id="cdName" maxlength="12" placeholder="名称，例如：期末考试" aria-label="倒计时名称">
+                <input type="date" id="cdDate" aria-label="目标日期">
+            </div>
+            <div class="cd-actions">
+                <button type="button" class="btn-close" id="cdSave">保存</button>
+                <button type="button" class="btn-close" id="cdClear">清除</button>
+                <button type="button" class="btn-close" id="cdClose">关闭</button>
+            </div>
         </div>
     </div>
 
@@ -680,6 +839,213 @@
             var f = fortunes[seed % fortunes.length];
             showToast(f.emoji, '今日运势 · ' + f.title, f.msg);
         });
+
+        /* ================= 今天吃什么 ================= */
+        var foods = [
+            { emoji: '🍜', name: '拉面' },
+            { emoji: '🍚', name: '黄焖鸡米饭' },
+            { emoji: '🥟', name: '饺子' },
+            { emoji: '🍲', name: '麻辣烫' },
+            { emoji: '🍛', name: '咖喱饭' },
+            { emoji: '🍕', name: '披萨' },
+            { emoji: '🍔', name: '汉堡' },
+            { emoji: '🍣', name: '寿司' },
+            { emoji: '🥘', name: '砂锅' },
+            { emoji: '🍝', name: '意面' },
+            { emoji: '🍢', name: '烧烤' },
+            { emoji: '🥗', name: '轻食沙拉' }
+        ];
+
+        document.getElementById('foodBtn').addEventListener('click', function () {
+            var f = foods[Math.floor(Math.random() * foods.length)];
+            showToast(f.emoji, '今天吃 · ' + f.name, '不满意？关掉再点一次，直到满意为止。');
+        });
+
+        /* ================= 掷骰子 / 抛硬币 / 随机数 ================= */
+        function randInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        document.getElementById('diceBtn').addEventListener('click', function () {
+            var faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+            var n = randInt(1, 6);
+            showToast(faces[n - 1], '掷骰子 · ' + n + ' 点', '点数是 ' + n + '，不服再来一次。');
+        });
+
+        document.getElementById('coinBtn').addEventListener('click', function () {
+            var heads = Math.random() < 0.5;
+            showToast(heads ? '🪙' : '🔘', '抛硬币 · ' + (heads ? '正面' : '反面'), '命运已经决定了，别纠结。');
+        });
+
+        /* 随机数(用户自定义范围,范围会记在浏览器里) */
+        var RN_KEY = 'randomRange';
+        var RN_LIMIT = 1000000000;
+        var rnOverlay = document.getElementById('rnOverlay');
+        var rnResult = document.getElementById('rnResult');
+        var rnHint = document.getElementById('rnHint');
+        var rnMin = document.getElementById('rnMin');
+        var rnMax = document.getElementById('rnMax');
+        var rnBtn = document.getElementById('randomBtn');
+        var rnLabel = rnBtn.querySelector('.label');
+
+        function loadRn() {
+            try {
+                var v = JSON.parse(safeGet(RN_KEY));
+                if (v && isFinite(v.min) && isFinite(v.max)) return v;
+            } catch (e) {}
+            return { min: 1, max: 100 };
+        }
+        function saveRn(v) {
+            try { localStorage.setItem(RN_KEY, JSON.stringify(v)); } catch (e) {}
+        }
+        function renderRnLabel() {
+            var r = loadRn();
+            rnLabel.textContent = '随机数 ' + r.min + '–' + r.max;
+        }
+
+        function openRn() {
+            var r = loadRn();
+            rnMin.value = r.min;
+            rnMax.value = r.max;
+            rnResult.textContent = '?';
+            rnHint.textContent = '范围 ' + r.min + ' 到 ' + r.max;
+            lastFocused = document.activeElement;
+            rnOverlay.classList.add('show');
+            document.getElementById('rnGo').focus();
+        }
+        function closeRn() {
+            rnOverlay.classList.remove('show');
+            if (lastFocused && lastFocused.focus) lastFocused.focus();
+        }
+
+        function generateRn() {
+            var a = parseInt(rnMin.value, 10);
+            var b = parseInt(rnMax.value, 10);
+            if (!isFinite(a) || !isFinite(b)) {
+                rnHint.textContent = '请把最小值和最大值都填上（整数）';
+                return;
+            }
+            if (Math.abs(a) > RN_LIMIT || Math.abs(b) > RN_LIMIT) {
+                rnHint.textContent = '数字太大了，请控制在正负 10 亿以内';
+                return;
+            }
+            if (a > b) { var t = a; a = b; b = t; }
+            rnMin.value = a;
+            rnMax.value = b;
+            saveRn({ min: a, max: b });
+            renderRnLabel();
+            rnResult.textContent = randInt(a, b);
+            rnHint.textContent = '范围 ' + a + ' 到 ' + b;
+        }
+
+        rnBtn.addEventListener('click', openRn);
+        document.getElementById('rnGo').addEventListener('click', generateRn);
+        document.getElementById('rnClose').addEventListener('click', closeRn);
+        [rnMin, rnMax].forEach(function (el) {
+            el.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') generateRn();
+            });
+        });
+        rnOverlay.addEventListener('click', function (e) {
+            if (e.target === rnOverlay) closeRn();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && rnOverlay.classList.contains('show')) closeRn();
+        });
+        renderRnLabel();
+
+        /* ================= 倒计时(用户自定义日期) ================= */
+        var CD_KEY = 'countdown';
+        var cdOverlay = document.getElementById('cdOverlay');
+        var cdResult  = document.getElementById('cdResult');
+        var cdName    = document.getElementById('cdName');
+        var cdDate    = document.getElementById('cdDate');
+        var cdBtn     = document.getElementById('countdownBtn');
+        var cdLabel   = cdBtn.querySelector('.label');
+
+        function loadCd() {
+            try {
+                var v = JSON.parse(safeGet(CD_KEY));
+                if (v && v.date) return v;
+            } catch (e) {}
+            return null;
+        }
+        function saveCd(v) {
+            try { localStorage.setItem(CD_KEY, JSON.stringify(v)); } catch (e) {}
+        }
+        function removeCd() {
+            try { localStorage.removeItem(CD_KEY); } catch (e) {}
+        }
+
+        function daysLeft(dateStr) {
+            var p = dateStr.split('-');
+            var target = new Date(+p[0], +p[1] - 1, +p[2]);
+            var now = new Date();
+            var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            return Math.round((target - today) / 86400000);
+        }
+
+        function describeCd(cd) {
+            var days = daysLeft(cd.date);
+            if (days > 0)  return '距离「' + cd.name + '」还有 ' + days + ' 天';
+            if (days === 0) return '「' + cd.name + '」就是今天！';
+            return '「' + cd.name + '」已经过去 ' + (-days) + ' 天';
+        }
+
+        function renderCd() {
+            var cd = loadCd();
+            if (!cd) {
+                cdLabel.textContent = '倒计时';
+                cdResult.textContent = '还没有设置目标日期';
+                return;
+            }
+            var days = daysLeft(cd.date);
+            cdLabel.textContent = days > 0 ? cd.name + ' ' + days + ' 天'
+                                : days === 0 ? cd.name + ' 今天'
+                                : '倒计时';
+            cdResult.textContent = describeCd(cd);
+        }
+
+        function openCd() {
+            var cd = loadCd();
+            cdName.value = cd ? cd.name : '';
+            cdDate.value = cd ? cd.date : '';
+            renderCd();
+            lastFocused = document.activeElement;
+            cdOverlay.classList.add('show');
+            (cd ? document.getElementById('cdClose') : cdDate).focus();
+        }
+        function closeCd() {
+            cdOverlay.classList.remove('show');
+            if (lastFocused && lastFocused.focus) lastFocused.focus();
+        }
+
+        cdBtn.addEventListener('click', openCd);
+        document.getElementById('cdClose').addEventListener('click', closeCd);
+        cdOverlay.addEventListener('click', function (e) {
+            if (e.target === cdOverlay) closeCd();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && cdOverlay.classList.contains('show')) closeCd();
+        });
+
+        document.getElementById('cdSave').addEventListener('click', function () {
+            if (!cdDate.value) {
+                cdResult.textContent = '请先选择一个目标日期';
+                cdDate.focus();
+                return;
+            }
+            saveCd({ name: cdName.value.trim() || '目标日', date: cdDate.value });
+            renderCd();
+        });
+        document.getElementById('cdClear').addEventListener('click', function () {
+            removeCd();
+            cdName.value = '';
+            cdDate.value = '';
+            renderCd();
+        });
+
+        renderCd();
 
         /* ================= 一键写完作业（假的） ================= */
         document.getElementById('homeworkBtn').addEventListener('click', function () {
