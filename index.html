@@ -397,7 +397,7 @@
             background: rgba(180, 150, 100, 0.2);
         }
 
-        /* ===== 鼠标跟随光点 ===== */
+        /* ===== 鼠标跟随光点（恢复） ===== */
         .cursor-dot {
             position: fixed;
             width: 10px;
@@ -416,19 +416,28 @@
             box-shadow: 0 0 14px 3px rgba(184, 144, 74, 0.25);
         }
 
-        /* ===== 点击星星 ===== */
-        .click-star {
+        /* ===== 长按拖尾星星 ===== */
+        .star-trail {
             position: fixed;
             pointer-events: none;
-            font-size: 1rem;
             z-index: 9999;
             user-select: none;
-            animation: starFloat 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            -webkit-user-select: none;
+            line-height: 1;
+            transform: translate(-50%, -50%);
+            will-change: transform, opacity;
+            animation: starFade 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
-        @keyframes starFloat {
-            0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, -180%) scale(1.6); }
+        @keyframes starFade {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.3) rotate(90deg);
+            }
         }
 
         @media (max-width: 600px) {
@@ -446,7 +455,8 @@
             .weather-corner { bottom: 14px; right: 14px; padding: 5px 12px 5px 10px; font-size: 0.68rem; }
             .toast-box { padding: 26px 22px 22px; }
             .toast-box .emoji { font-size: 2.4rem; }
-            .cursor-dot { display: none; } /* 触屏设备不需要 */
+            .cursor-dot { display: none; }
+            .star-trail { display: none; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -460,7 +470,7 @@
             .link-item:hover { transform: none; }
             .link-item:active { transform: none; }
             .cursor-dot { display: none; }
-            .click-star { animation: none !important; opacity: 0 !important; }
+            .star-trail { display: none !important; }
         }
     </style>
 </head>
@@ -497,14 +507,14 @@
                 <span class="arrow" aria-hidden="true">↗</span>
             </a>
 
-            <!-- 3. 今日运势 -->
+            <!-- 今日运势 -->
             <a href="javascript:void(0)" class="link-item" id="fortuneBtn">
                 <span class="ico" aria-hidden="true">🔮</span>
                 <span>今日运势</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </a>
 
-            <!-- 5. 一键写完作业（假的） -->
+            <!-- 一键写完作业（假的） -->
             <a href="javascript:void(0)" class="link-item" id="homeworkBtn">
                 <span class="ico" aria-hidden="true">🚀</span>
                 <span>一键写完作业</span>
@@ -617,12 +627,12 @@
             if (e.target === overlay) hideToast();
         });
 
-        /* ================= 3. 今日运势 ================= */
+        /* ================= 今日运势 ================= */
         var fortunes = [
             { emoji: '🌟', title: '大吉', msg: '今天适合摸鱼，作业会自己写完的。' },
             { emoji: '✨', title: '中吉', msg: '老师今天心情不错，可以试试问问题。' },
             { emoji: '🍀', title: '小吉', msg: '会有人请你喝奶茶（大概）。' },
-            { emoji: '🌙', title: '平', msg: '普普通通的一天，耍起就完了。' },
+            { emoji: '🌙', title: '平', msg: '普普通通的一天，摸就完了。' },
             { emoji: '🌧', title: '小凶', msg: '别忘带作业，真的。' },
             { emoji: '💀', title: '大凶', msg: '建议请假，或者装病。' },
             { emoji: '🎁', title: '惊喜', msg: '今天会有好事发生，信我。' }
@@ -630,7 +640,6 @@
 
         document.getElementById('fortuneBtn').addEventListener('click', function (e) {
             e.preventDefault();
-            // 用日期做种子，同一天结果固定
             var d = new Date();
             var seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
             var idx = seed % fortunes.length;
@@ -638,13 +647,13 @@
             showToast(f.emoji, '今日运势 · ' + f.title, f.msg);
         });
 
-        /* ================= 5. 一键写完作业（假的） ================= */
+        /* ================= 一键写完作业（假的） ================= */
         document.getElementById('homeworkBtn').addEventListener('click', function (e) {
             e.preventDefault();
-            showToast('😂', '启动失败', '作业引擎正在开发中……（这波贪了）');
+            showToast('🚀', '启动失败', '作业引擎正在开发中……（其实永远不会开发）');
         });
 
-        /* ================= 6. 鼠标跟随光点 ================= */
+        /* ================= 鼠标跟随光点 ================= */
         var dot = document.createElement('div');
         dot.className = 'cursor-dot';
         document.body.appendChild(dot);
@@ -663,23 +672,80 @@
             dot.style.display = 'none';
         }
 
-        /* ================= 7. 点击爆星星 ================= */
-        var starChars = ['✨', '⭐', '💫', '🌟', '✦'];
-        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        document.addEventListener('click', function (e) {
+        /* ================= 长按鼠标 → 连续爆星星拖尾 ================= */
+        (function () {
+            var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (reduceMotion) return;
-            // 点在卡片或按钮上不触发，避免干扰
-            if (e.target.closest('a, button, input, textarea')) return;
+            if (!hasPointer) return;
 
-            var star = document.createElement('span');
-            star.className = 'click-star';
-            star.textContent = starChars[Math.floor(Math.random() * starChars.length)];
-            star.style.left = e.clientX + 'px';
-            star.style.top = e.clientY + 'px';
-            document.body.appendChild(star);
-            setTimeout(function () { star.remove(); }, 900);
-        });
+            var starChars = ['✦', '✧', '★', '✶', '✷', '✨', '⭐', '💫', '🌟'];
+
+            var isDown = false;
+            var lastX = 0, lastY = 0;
+            var lastTime = 0;
+
+            var MIN_DIST = 10;
+            var MIN_INTERVAL = 30;
+
+            function spawnStar(x, y) {
+                var star = document.createElement('span');
+                star.className = 'star-trail';
+                star.textContent = starChars[Math.floor(Math.random() * starChars.length)];
+
+                if (document.body.classList.contains('light-mode')) {
+                    star.style.color = '#c9a86a';
+                    star.style.textShadow = '0 0 6px rgba(184,144,74,0.6)';
+                } else {
+                    star.style.color = '#60a5fa';
+                    star.style.textShadow = '0 0 6px rgba(59,130,246,0.6)';
+                }
+
+                var size = 0.8 + Math.random() * 0.7;
+                star.style.fontSize = size + 'rem';
+
+                var ox = (Math.random() - 0.5) * 12;
+                var oy = (Math.random() - 0.5) * 12;
+                star.style.left = (x + ox) + 'px';
+                star.style.top  = (y + oy) + 'px';
+
+                document.body.appendChild(star);
+                setTimeout(function () { star.remove(); }, 1000);
+            }
+
+            document.addEventListener('mousedown', function (e) {
+                if (e.button !== 0) return;
+                isDown = true;
+                lastX = e.clientX;
+                lastY = e.clientY;
+                lastTime = Date.now();
+                spawnStar(e.clientX, e.clientY);
+            });
+
+            document.addEventListener('mouseup', function () {
+                isDown = false;
+            });
+
+            document.addEventListener('mousemove', function (e) {
+                if (!isDown) return;
+
+                var now = Date.now();
+                var x = e.clientX, y = e.clientY;
+                var dx = x - lastX;
+                var dy = y - lastY;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist >= MIN_DIST && (now - lastTime) >= MIN_INTERVAL) {
+                    spawnStar(x, y);
+                    lastX = x;
+                    lastY = y;
+                    lastTime = now;
+                }
+            });
+
+            document.addEventListener('mouseleave', function () {
+                isDown = false;
+            });
+        })();
 
         /* ================= 卡片入场 ================= */
         var items  = Array.prototype.slice.call(document.querySelectorAll('.link-item'));
