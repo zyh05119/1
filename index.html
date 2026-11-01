@@ -284,6 +284,15 @@
             color: #a8863a;
         }
 
+        /* ===== 语言切换 ===== */
+        .lang-toggle {
+            right: 60px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            font-family: inherit;
+        }
+
         /* ===== 天气 ===== */
         .weather-corner {
             position: fixed;
@@ -578,6 +587,83 @@
         .snake-pad [data-d="down"]  { grid-column: 2; grid-row: 2; }
         .snake-pad [data-d="right"] { grid-column: 3; grid-row: 2; }
 
+        /* ===== 井字棋 ===== */
+        .toast-box .ttt-status { margin-bottom: 12px; min-height: 1.4em; }
+        .ttt-mode {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .ttt-mode button {
+            flex: 1;
+            padding: 8px 0;
+            border-radius: 12px;
+            border: 1px solid rgba(60, 110, 120, 0.2);
+            background: rgba(60, 110, 120, 0.06);
+            color: #c8d8dc;
+            font-family: inherit;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .ttt-mode button.on {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.15);
+        }
+        .ttt-mode button:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
+        body.light-mode .ttt-mode button {
+            border-color: rgba(180, 150, 100, 0.3);
+            background: rgba(180, 150, 100, 0.08);
+            color: #4a4232;
+        }
+        body.light-mode .ttt-mode button.on {
+            border-color: #c9a86a;
+            background: rgba(201, 168, 106, 0.25);
+        }
+        .ttt-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-width: 240px;
+            margin: 0 auto 14px;
+        }
+        .ttt-cell {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            border: 1px solid rgba(60, 110, 120, 0.2);
+            background: rgba(60, 110, 120, 0.06);
+            color: #c8d8dc;
+            font-family: inherit;
+            font-size: 2rem;
+            font-weight: 300;
+            line-height: 1;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, transform 0.15s;
+        }
+        .ttt-cell:disabled { cursor: default; }
+        .ttt-cell:hover:not(:disabled) {
+            background: rgba(60, 110, 120, 0.15);
+            border-color: #3b82f6;
+        }
+        .ttt-cell:active:not(:disabled) { transform: scale(0.94); }
+        .ttt-cell:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
+        .ttt-cell.x { color: #60a5fa; }
+        .ttt-cell.o { color: #c8a85a; }
+        .ttt-cell.win { border-color: #3b82f6; background: rgba(59, 130, 246, 0.2); }
+        body.light-mode .ttt-cell {
+            border-color: rgba(180, 150, 100, 0.3);
+            background: rgba(180, 150, 100, 0.08);
+            color: #4a4232;
+        }
+        body.light-mode .ttt-cell:hover:not(:disabled) {
+            background: rgba(180, 150, 100, 0.18);
+            border-color: #c9a86a;
+        }
+        body.light-mode .ttt-cell.x { color: #9c7a3a; }
+        body.light-mode .ttt-cell.o { color: #5b7f85; }
+        body.light-mode .ttt-cell.win { border-color: #c9a86a; background: rgba(201, 168, 106, 0.3); }
+
         /* ===== 鼠标跟随光点 ===== */
         .cursor-dot {
             position: fixed;
@@ -633,6 +719,7 @@
             }
             .link-item { padding: 0.5rem 0.7rem; font-size: 0.78rem; }
             .theme-toggle { top: 12px; right: 12px; width: 32px; height: 32px; font-size: 0.8rem; }
+            .lang-toggle { right: 52px; font-size: 0.65rem; }
             .weather-corner { bottom: 14px; right: 14px; padding: 5px 12px 5px 10px; font-size: 0.68rem; }
             .toast-box { padding: 26px 22px 22px; }
             .toast-box .emoji { font-size: 2.4rem; }
@@ -657,7 +744,8 @@
 </head>
 <body>
 
-    <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换黑白模式">✦</button>
+    <button class="theme-toggle" id="themeToggle" type="button" data-i18n-aria="aria_theme" aria-label="切换黑白模式">✦</button>
+    <button class="theme-toggle lang-toggle" id="langToggle" type="button" data-i18n-aria="aria_lang" aria-label="切换语言">EN</button>
 
     <div class="weather-corner" id="weatherCorner" aria-hidden="true">
         <span class="w-icon" id="weatherIcon">🌤</span>
@@ -666,8 +754,8 @@
     </div>
 
     <div class="hero">
-        <h1>冷涩调</h1>
-        <p>你今天想做些什么呢？</p>
+        <h1 data-i18n="brand">冷涩调</h1>
+        <p data-i18n="hero_sub">你今天想做些什么呢？</p>
     </div>
 
     <div class="divider"></div>
@@ -677,26 +765,26 @@
             <!-- 工具(外部站点,新标签打开) -->
             <a href="https://base64.shuttlelab.org/" class="link-item" target="_blank" rel="noopener noreferrer">
                 <span class="ico" aria-hidden="true">🔐</span>
-                <span class="label">Base64 编解码</span>
+                <span class="label" data-i18n="l_base64">Base64 编解码</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </a>
 
             <!-- 学习与放松 -->
             <a href="https://zh.wikipedia.org/" class="link-item" target="_blank" rel="noopener noreferrer">
                 <span class="ico" aria-hidden="true">📚</span>
-                <span class="label">维基百科</span>
+                <span class="label" data-i18n="l_wiki">维基百科</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </a>
 
             <a href="https://www.bilibili.com/" class="link-item" target="_blank" rel="noopener noreferrer">
                 <span class="ico" aria-hidden="true">📺</span>
-                <span class="label">哔哩哔哩</span>
+                <span class="label" data-i18n="l_bili">哔哩哔哩</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </a>
 
             <a href="https://www.zhihu.com/" class="link-item" target="_blank" rel="noopener noreferrer">
                 <span class="ico" aria-hidden="true">💡</span>
-                <span class="label">知乎</span>
+                <span class="label" data-i18n="l_zhihu">知乎</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </a>
 
@@ -709,35 +797,35 @@
             <!-- 系统报错(站内页面,当前标签打开) -->
             <a href="feedback.html#bug" class="link-item">
                 <span class="ico" aria-hidden="true">🐛</span>
-                <span class="label">系统报错</span>
+                <span class="label" data-i18n="l_bug">系统报错</span>
                 <span class="arrow" aria-hidden="true">→</span>
             </a>
 
             <!-- 今日运势 -->
             <button type="button" class="link-item" id="fortuneBtn">
                 <span class="ico" aria-hidden="true">🔮</span>
-                <span class="label">今日运势</span>
+                <span class="label" data-i18n="l_fortune">今日运势</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </button>
 
             <!-- 今天吃什么 -->
             <button type="button" class="link-item" id="foodBtn">
                 <span class="ico" aria-hidden="true">🍜</span>
-                <span class="label">今天吃什么</span>
+                <span class="label" data-i18n="l_food">今天吃什么</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </button>
 
             <!-- 掷骰子 -->
             <button type="button" class="link-item" id="diceBtn">
                 <span class="ico" aria-hidden="true">🎲</span>
-                <span class="label">掷骰子</span>
+                <span class="label" data-i18n="l_dice">掷骰子</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </button>
 
             <!-- 抛硬币 -->
             <button type="button" class="link-item" id="coinBtn">
                 <span class="ico" aria-hidden="true">🪙</span>
-                <span class="label">抛硬币</span>
+                <span class="label" data-i18n="l_coin">抛硬币</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </button>
 
@@ -751,21 +839,28 @@
             <!-- 猜拳:对战机器人 -->
             <button type="button" class="link-item" id="rpsBotBtn">
                 <span class="ico" aria-hidden="true">🤖</span>
-                <span class="label">猜拳 · 机器人</span>
+                <span class="label" data-i18n="l_rps_bot">猜拳 · 机器人</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </button>
 
             <!-- 猜拳:面对面 -->
             <button type="button" class="link-item" id="rpsDuoBtn">
                 <span class="ico" aria-hidden="true">🤝</span>
-                <span class="label">猜拳 · 面对面</span>
+                <span class="label" data-i18n="l_rps_duo">猜拳 · 面对面</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </button>
 
             <!-- 贪吃蛇 -->
             <button type="button" class="link-item" id="snakeBtn">
                 <span class="ico" aria-hidden="true">🐍</span>
-                <span class="label">贪吃蛇</span>
+                <span class="label" data-i18n="l_snake">贪吃蛇</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </button>
+
+            <!-- 井字棋 -->
+            <button type="button" class="link-item" id="tttBtn">
+                <span class="ico" aria-hidden="true">⭕</span>
+                <span class="label" data-i18n="l_ttt">井字棋</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </button>
 
@@ -779,14 +874,14 @@
             <!-- 一键写完作业(假的) -->
             <button type="button" class="link-item" id="homeworkBtn">
                 <span class="ico" aria-hidden="true">🚀</span>
-                <span class="label">一键写完作业</span>
+                <span class="label" data-i18n="l_homework">一键写完作业</span>
                 <span class="arrow" aria-hidden="true">↗</span>
             </button>
         </div>
     </div>
 
     <div class="footer-note">
-        如有疑问 请联系 <a href="about.html">冷涩调</a> 本人或管理员进行反馈哦
+        <span data-i18n="footer1">如有疑问 请联系 </span><a href="about.html" data-i18n="brand">冷涩调</a><span data-i18n="footer2"> 本人或管理员进行反馈哦</span>
     </div>
 
     <!-- 通用弹窗 -->
@@ -795,29 +890,48 @@
             <span class="emoji" id="toastEmoji" aria-hidden="true">🔮</span>
             <div class="title" id="toastTitle">今日运势</div>
             <div class="msg" id="toastMsg">…</div>
-            <button type="button" class="btn-close" id="toastCloseBtn">知道了</button>
+            <button type="button" class="btn-close" id="toastCloseBtn" data-i18n="got_it">知道了</button>
+        </div>
+    </div>
+
+    <!-- 井字棋弹窗 -->
+    <div class="toast-overlay" id="tttOverlay">
+        <div class="toast-box" role="dialog" aria-modal="true" aria-labelledby="tttTitle">
+            <div class="title" id="tttTitle" data-i18n="ttt_title">井字棋</div>
+            <div class="ttt-mode">
+                <button type="button" data-mode="bot" data-i18n="ttt_mode_bot">对战机器人</button>
+                <button type="button" data-mode="duo" data-i18n="ttt_mode_duo">面对面</button>
+            </div>
+            <div class="msg ttt-status" id="tttStatus" aria-live="polite"></div>
+            <div class="ttt-board" id="tttBoard"></div>
+            <div class="rps-score" id="tttScore"></div>
+            <div class="cd-actions">
+                <button type="button" class="btn-close" id="tttNew" data-i18n="ttt_new">新一局</button>
+                <button type="button" class="btn-close" id="tttReset" data-i18n="rps_reset">清零比分</button>
+                <button type="button" class="btn-close" id="tttClose" data-i18n="close">关闭</button>
+            </div>
         </div>
     </div>
 
     <!-- 贪吃蛇弹窗 -->
     <div class="toast-overlay" id="snakeOverlay">
         <div class="toast-box snake-box" role="dialog" aria-modal="true" aria-labelledby="snakeTitle">
-            <div class="title" id="snakeTitle">贪吃蛇</div>
+            <div class="title" id="snakeTitle" data-i18n="snake_title">贪吃蛇</div>
             <div class="snake-score">
                 <span id="snakeScore">得分 0</span>
                 <span id="snakeBest">最高 0</span>
             </div>
-            <canvas id="snakeCanvas" class="snake-canvas" aria-label="贪吃蛇游戏画面"></canvas>
-            <div class="snake-hint" id="snakeHint">方向键或 WASD 控制，空格暂停；手机上直接在画面上滑动</div>
+            <canvas id="snakeCanvas" class="snake-canvas" aria-label="贪吃蛇游戏画面" data-i18n-aria="snake_canvas_aria"></canvas>
+            <div class="snake-hint" id="snakeHint" data-i18n="snake_hint">方向键或 WASD 控制，空格暂停；手机上直接在画面上滑动</div>
             <div class="snake-pad" id="snakePad">
-                <button type="button" data-d="up" aria-label="上">▲</button>
-                <button type="button" data-d="left" aria-label="左">◀</button>
-                <button type="button" data-d="down" aria-label="下">▼</button>
-                <button type="button" data-d="right" aria-label="右">▶</button>
+                <button type="button" data-d="up" aria-label="上" data-i18n-aria="aria_up">▲</button>
+                <button type="button" data-d="left" aria-label="左" data-i18n-aria="aria_left">◀</button>
+                <button type="button" data-d="down" aria-label="下" data-i18n-aria="aria_down">▼</button>
+                <button type="button" data-d="right" aria-label="右" data-i18n-aria="aria_right">▶</button>
             </div>
             <div class="cd-actions">
                 <button type="button" class="btn-close" id="snakeToggle">开始</button>
-                <button type="button" class="btn-close" id="snakeClose">关闭</button>
+                <button type="button" class="btn-close" id="snakeClose" data-i18n="close">关闭</button>
             </div>
         </div>
     </div>
@@ -830,14 +944,14 @@
             <div class="msg" id="rpsHint">出招吧，选一个</div>
             <div class="rps-score" id="rpsScore"></div>
             <div class="rps-choices" id="rpsChoices">
-                <button type="button" data-i="0" aria-label="石头">✊</button>
-                <button type="button" data-i="1" aria-label="剪刀">✌️</button>
-                <button type="button" data-i="2" aria-label="布">✋</button>
+                <button type="button" data-i="0" aria-label="石头" data-i18n-aria="rps_rock">✊</button>
+                <button type="button" data-i="1" aria-label="剪刀" data-i18n-aria="rps_scissors">✌️</button>
+                <button type="button" data-i="2" aria-label="布" data-i18n-aria="rps_paper">✋</button>
             </div>
             <div class="cd-actions">
-                <button type="button" class="btn-close" id="rpsAgain" hidden>再来一局</button>
-                <button type="button" class="btn-close" id="rpsReset">清零比分</button>
-                <button type="button" class="btn-close" id="rpsClose">关闭</button>
+                <button type="button" class="btn-close" id="rpsAgain" data-i18n="rps_again" hidden>再来一局</button>
+                <button type="button" class="btn-close" id="rpsReset" data-i18n="rps_reset">清零比分</button>
+                <button type="button" class="btn-close" id="rpsClose" data-i18n="close">关闭</button>
             </div>
         </div>
     </div>
@@ -846,19 +960,19 @@
     <div class="toast-overlay" id="rnOverlay">
         <div class="toast-box" role="dialog" aria-modal="true" aria-labelledby="rnTitle">
             <span class="emoji" aria-hidden="true">🔢</span>
-            <div class="title" id="rnTitle">随机数</div>
+            <div class="title" id="rnTitle" data-i18n="rn_title">随机数</div>
             <div class="rn-result" id="rnResult" aria-live="polite">?</div>
             <div class="msg" id="rnHint">范围 1 到 100</div>
             <div class="cd-form">
                 <div class="rn-row">
-                    <input type="number" id="rnMin" step="1" inputmode="numeric" aria-label="最小值" placeholder="最小值">
-                    <span>到</span>
-                    <input type="number" id="rnMax" step="1" inputmode="numeric" aria-label="最大值" placeholder="最大值">
+                    <input type="number" id="rnMin" step="1" inputmode="numeric" aria-label="最小值" placeholder="最小值" data-i18n-aria="rn_min" data-i18n-ph="rn_min">
+                    <span data-i18n="rn_to">到</span>
+                    <input type="number" id="rnMax" step="1" inputmode="numeric" aria-label="最大值" placeholder="最大值" data-i18n-aria="rn_max" data-i18n-ph="rn_max">
                 </div>
             </div>
             <div class="cd-actions">
-                <button type="button" class="btn-close" id="rnGo">生成</button>
-                <button type="button" class="btn-close" id="rnClose">关闭</button>
+                <button type="button" class="btn-close" id="rnGo" data-i18n="rn_go">生成</button>
+                <button type="button" class="btn-close" id="rnClose" data-i18n="close">关闭</button>
             </div>
         </div>
     </div>
@@ -867,16 +981,16 @@
     <div class="toast-overlay" id="cdOverlay">
         <div class="toast-box" role="dialog" aria-modal="true" aria-labelledby="cdTitle">
             <span class="emoji" aria-hidden="true">⏳</span>
-            <div class="title" id="cdTitle">倒计时</div>
+            <div class="title" id="cdTitle" data-i18n="cd_title">倒计时</div>
             <div class="msg" id="cdResult">还没有设置目标日期</div>
             <div class="cd-form">
-                <input type="text" id="cdName" maxlength="12" placeholder="名称，例如：期末考试" aria-label="倒计时名称">
-                <input type="date" id="cdDate" aria-label="目标日期">
+                <input type="text" id="cdName" maxlength="12" placeholder="名称，例如：期末考试" aria-label="倒计时名称" data-i18n-ph="cd_name_ph" data-i18n-aria="cd_name_aria">
+                <input type="date" id="cdDate" aria-label="目标日期" data-i18n-aria="cd_date_aria">
             </div>
             <div class="cd-actions">
-                <button type="button" class="btn-close" id="cdSave">保存</button>
-                <button type="button" class="btn-close" id="cdClear">清除</button>
-                <button type="button" class="btn-close" id="cdClose">关闭</button>
+                <button type="button" class="btn-close" id="cdSave" data-i18n="cd_save">保存</button>
+                <button type="button" class="btn-close" id="cdClear" data-i18n="cd_clear">清除</button>
+                <button type="button" class="btn-close" id="cdClose" data-i18n="close">关闭</button>
             </div>
         </div>
     </div>
@@ -896,6 +1010,154 @@
         function safeSet(key, val) {
             try { localStorage.setItem(key, val); } catch (e) {}
         }
+
+        /* ================= 多语言 (中文 / English) ================= */
+        var I18N = {
+            zh: {
+                brand: '冷涩调',
+                l_ttt: '井字棋', ttt_title: '井字棋', ttt_mode_bot: '对战机器人', ttt_mode_duo: '面对面',
+                ttt_turn: '轮到 {name}（{mark}）', ttt_new: '新一局',
+                ttt_cell: '第 {n} 格', ttt_cell_marked: '第 {n} 格，{mark}',
+                aria_theme: '切换黑白模式', aria_lang: '切换语言',
+                hero_sub: '你今天想做些什么呢？',
+                l_base64: 'Base64 编解码', l_wiki: '维基百科', l_bili: '哔哩哔哩', l_zhihu: '知乎',
+                l_bug: '系统报错', l_fortune: '今日运势', l_food: '今天吃什么', l_dice: '掷骰子',
+                l_coin: '抛硬币', l_rps_bot: '猜拳 · 机器人', l_rps_duo: '猜拳 · 面对面',
+                l_snake: '贪吃蛇', l_homework: '一键写完作业',
+                footer1: '如有疑问 请联系 ', footer2: ' 本人或管理员进行反馈哦',
+                got_it: '知道了', close: '关闭',
+                fortune_title: '今日运势 · {title}',
+                food_title: '今天吃 · {name}', food_msg: '不满意？关掉再点一次，直到满意为止。',
+                dice_title: '掷骰子 · {n} 点', dice_msg: '点数是 {n}，不服再来一次。',
+                coin_title: '抛硬币 · {side}', coin_heads: '正面', coin_tails: '反面',
+                coin_msg: '命运已经决定了，别纠结。',
+                hw_title: '启动失败', hw_msg: '作业引擎正在开发中……（其实永远不会开发）',
+                rn_title: '随机数', rn_min: '最小值', rn_max: '最大值', rn_to: '到', rn_go: '生成',
+                rn_label: '随机数 {a}–{b}', rn_range: '范围 {a} 到 {b}',
+                rn_err_empty: '请把最小值和最大值都填上（整数）',
+                rn_err_big: '数字太大了，请控制在正负 10 亿以内',
+                cd_title: '倒计时', cd_name_ph: '名称，例如：期末考试', cd_name_aria: '倒计时名称',
+                cd_date_aria: '目标日期', cd_save: '保存', cd_clear: '清除',
+                cd_none: '还没有设置目标日期', cd_need_date: '请先选择一个目标日期',
+                cd_default_name: '目标日',
+                cd_label_days: '{name} {n} 天', cd_label_today: '{name} 今天',
+                cd_left: '距离「{name}」还有 {n} 天', cd_left_one: '距离「{name}」还有 {n} 天',
+                cd_today: '「{name}」就是今天！',
+                cd_past: '「{name}」已经过去 {n} 天', cd_past_one: '「{name}」已经过去 {n} 天',
+                rps_title_bot: '猜拳 · 对战机器人', rps_title_duo: '猜拳 · 面对面',
+                rps_hint_bot: '出招吧，选一个',
+                rps_hint_p1: '玩家 1 请选择（选完把设备交给对方）',
+                rps_hint_p2: '玩家 2 请选择（玩家 1 不要偷看哦）',
+                rps_rock: '石头', rps_scissors: '剪刀', rps_paper: '布',
+                rps_again: '再来一局', rps_reset: '清零比分',
+                rps_you: '你', rps_bot: '机器人', rps_p1: '玩家 1', rps_p2: '玩家 2',
+                rps_score: '比分  {a} {x} : {y} {b}  ·  平局 {d}',
+                rps_vs: '{A} 对 {B}，', rps_draw: '平局！',
+                rps_win_you: '你赢了！', rps_win_bot: '机器人赢了！',
+                rps_win_p1: '玩家 1 赢了！', rps_win_p2: '玩家 2 赢了！',
+                snake_title: '贪吃蛇', snake_canvas_aria: '贪吃蛇游戏画面',
+                snake_hint: '方向键或 WASD 控制，空格暂停；手机上直接在画面上滑动',
+                aria_up: '上', aria_left: '左', aria_down: '下', aria_right: '右',
+                snake_start: '开始', snake_pause: '暂停', snake_resume: '继续', snake_restart: '重新开始',
+                snake_idle: '按方向键或点「开始」', snake_paused: '已暂停',
+                snake_over: '游戏结束', snake_win: '通关！',
+                snake_score_suffix: ' · 得分 {n}', snake_score: '得分 {n}', snake_best: '最高 {n}'
+            },
+            en: {
+                brand: 'idk how to translate this',
+                l_ttt: 'Tic-Tac-Toe', ttt_title: 'Tic-Tac-Toe', ttt_mode_bot: 'vs Bot', ttt_mode_duo: 'vs Friend',
+                ttt_turn: 'Turn: {name} ({mark})', ttt_new: 'New round',
+                ttt_cell: 'Cell {n}', ttt_cell_marked: 'Cell {n}, {mark}',
+                aria_theme: 'Toggle light/dark theme', aria_lang: 'Switch language',
+                hero_sub: 'What would you like to do today?',
+                l_base64: 'Base64 Encode/Decode', l_wiki: 'Wikipedia', l_bili: 'Bilibili', l_zhihu: 'Zhihu',
+                l_bug: 'Report a Bug', l_fortune: 'Daily Fortune', l_food: 'What to Eat', l_dice: 'Roll Dice',
+                l_coin: 'Flip a Coin', l_rps_bot: 'RPS · vs Bot', l_rps_duo: 'RPS · vs Friend',
+                l_snake: 'Snake', l_homework: 'One-Click Homework',
+                footer1: 'Questions? Contact ', footer2: ' or an admin to give feedback.',
+                got_it: 'Got it', close: 'Close',
+                fortune_title: 'Daily Fortune · {title}',
+                food_title: 'Eat today · {name}', food_msg: 'Not feeling it? Close this and click again until you are.',
+                dice_title: 'Dice · {n}', dice_msg: 'You rolled a {n}. Roll again if you dare.',
+                coin_title: 'Coin Flip · {side}', coin_heads: 'Heads', coin_tails: 'Tails',
+                coin_msg: 'Fate has decided. No second-guessing.',
+                hw_title: 'Launch failed', hw_msg: 'The homework engine is under development... (it never will be).',
+                rn_title: 'Random Number', rn_min: 'Min', rn_max: 'Max', rn_to: 'to', rn_go: 'Generate',
+                rn_label: 'Random {a}–{b}', rn_range: 'Range: {a} to {b}',
+                rn_err_empty: 'Please fill in both min and max (integers).',
+                rn_err_big: 'Number too large. Keep it within ±1,000,000,000.',
+                cd_title: 'Countdown', cd_name_ph: 'Name, e.g. Final exam', cd_name_aria: 'Countdown name',
+                cd_date_aria: 'Target date', cd_save: 'Save', cd_clear: 'Clear',
+                cd_none: 'No target date set yet', cd_need_date: 'Please pick a target date first',
+                cd_default_name: 'Target day',
+                cd_label_days: '{name} · {n}d', cd_label_today: '{name} · today',
+                cd_left: '{n} days until "{name}"', cd_left_one: '1 day until "{name}"',
+                cd_today: '"{name}" is today!',
+                cd_past: '"{name}" was {n} days ago', cd_past_one: '"{name}" was 1 day ago',
+                rps_title_bot: 'Rock Paper Scissors · vs Bot', rps_title_duo: 'Rock Paper Scissors · vs Friend',
+                rps_hint_bot: 'Make your move!',
+                rps_hint_p1: 'Player 1, pick one (then hand the device over)',
+                rps_hint_p2: 'Player 2, pick one (Player 1, no peeking!)',
+                rps_rock: 'Rock', rps_scissors: 'Scissors', rps_paper: 'Paper',
+                rps_again: 'Play again', rps_reset: 'Reset score',
+                rps_you: 'You', rps_bot: 'Bot', rps_p1: 'Player 1', rps_p2: 'Player 2',
+                rps_score: 'Score  {a} {x} : {y} {b}  ·  Draws {d}',
+                rps_vs: '{A} vs {B}. ', rps_draw: 'Draw!',
+                rps_win_you: 'You win!', rps_win_bot: 'The bot wins!',
+                rps_win_p1: 'Player 1 wins!', rps_win_p2: 'Player 2 wins!',
+                snake_title: 'Snake', snake_canvas_aria: 'Snake game board',
+                snake_hint: 'Arrow keys or WASD to move, Space to pause. On mobile, swipe on the board.',
+                aria_up: 'Up', aria_left: 'Left', aria_down: 'Down', aria_right: 'Right',
+                snake_start: 'Start', snake_pause: 'Pause', snake_resume: 'Resume', snake_restart: 'Restart',
+                snake_idle: 'Press an arrow key or tap Start', snake_paused: 'Paused',
+                snake_over: 'Game over', snake_win: 'You win!',
+                snake_score_suffix: ' · Score {n}', snake_score: 'Score {n}', snake_best: 'Best {n}'
+            }
+        };
+
+        var lang = safeGet('lang') === 'en' ? 'en' : 'zh';
+        var langToggle = document.getElementById('langToggle');
+
+        function t(key, vars) {
+            var d = I18N[lang];
+            var str = (d && d[key] !== undefined) ? d[key]
+                    : (I18N.zh[key] !== undefined ? I18N.zh[key] : key);
+            if (vars) {
+                for (var k in vars) {
+                    if (Object.prototype.hasOwnProperty.call(vars, k)) {
+                        str = str.split('{' + k + '}').join(vars[k]);
+                    }
+                }
+            }
+            return str;
+        }
+
+        function applyLang() {
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+            document.title = t('brand');
+            Array.prototype.forEach.call(document.querySelectorAll('[data-i18n]'), function (el) {
+                el.textContent = t(el.getAttribute('data-i18n'));
+            });
+            Array.prototype.forEach.call(document.querySelectorAll('[data-i18n-ph]'), function (el) {
+                el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph')));
+            });
+            Array.prototype.forEach.call(document.querySelectorAll('[data-i18n-aria]'), function (el) {
+                el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
+            });
+            langToggle.textContent = lang === 'zh' ? 'EN' : '中';
+            /* 由脚本动态生成文字的部分 */
+            renderCd();
+            renderRnLabel();
+            updateSnakeUI();
+            drawSnake();
+            renderTtt();
+        }
+
+        langToggle.addEventListener('click', function () {
+            lang = lang === 'zh' ? 'en' : 'zh';
+            safeSet('lang', lang);
+            applyLang();
+        });
 
         /* ================= 主题切换 ================= */
         var toggleBtn = document.getElementById('themeToggle');
@@ -996,41 +1258,56 @@
 
         /* ================= 今日运势 ================= */
         var fortunes = [
-            { emoji: '🌟', title: '大吉', msg: '今天适合摸鱼，作业会自己写完的。' },
-            { emoji: '✨', title: '中吉', msg: '老师今天心情不错，可以试试问问题。' },
-            { emoji: '🍀', title: '小吉', msg: '会有人请你喝奶茶（大概）。' },
-            { emoji: '🌙', title: '平', msg: '普普通通的一天，摸就完了。' },
-            { emoji: '🌧', title: '小凶', msg: '别忘带作业，真的。' },
-            { emoji: '💀', title: '大凶', msg: '建议请假，或者装病。' },
-            { emoji: '🎁', title: '惊喜', msg: '今天会有好事发生，信我。' }
+            { emoji: '🌟',
+              zh: { title: '大吉', msg: '今天适合摸鱼，作业会自己写完的。' },
+              en: { title: 'Great Luck', msg: 'Slack off today. The homework will write itself.' } },
+            { emoji: '✨',
+              zh: { title: '中吉', msg: '老师今天心情不错，可以试试问问题。' },
+              en: { title: 'Good Luck', msg: 'Your teacher is in a good mood. Try asking a question.' } },
+            { emoji: '🍀',
+              zh: { title: '小吉', msg: '会有人请你喝奶茶（大概）。' },
+              en: { title: 'Minor Luck', msg: 'Someone might treat you to bubble tea (probably).' } },
+            { emoji: '🌙',
+              zh: { title: '平', msg: '普普通通的一天，摸就完了。' },
+              en: { title: 'Neutral', msg: 'An ordinary day. Just coast through it.' } },
+            { emoji: '🌧',
+              zh: { title: '小凶', msg: '别忘带作业，真的。' },
+              en: { title: 'Minor Bad Luck', msg: 'Do not forget your homework. Seriously.' } },
+            { emoji: '💀',
+              zh: { title: '大凶', msg: '建议请假，或者装病。' },
+              en: { title: 'Bad Luck', msg: 'Consider taking the day off, or faking being sick.' } },
+            { emoji: '🎁',
+              zh: { title: '惊喜', msg: '今天会有好事发生，信我。' },
+              en: { title: 'Surprise', msg: 'Something good is going to happen today. Trust me.' } }
         ];
 
         document.getElementById('fortuneBtn').addEventListener('click', function () {
             var d = new Date();
             var seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
             var f = fortunes[seed % fortunes.length];
-            showToast(f.emoji, '今日运势 · ' + f.title, f.msg);
+            var L = f[lang];
+            showToast(f.emoji, t('fortune_title', { title: L.title }), L.msg);
         });
 
         /* ================= 今天吃什么 ================= */
         var foods = [
-            { emoji: '🍜', name: '拉面' },
-            { emoji: '🍚', name: '黄焖鸡米饭' },
-            { emoji: '🥟', name: '饺子' },
-            { emoji: '🍲', name: '麻辣烫' },
-            { emoji: '🍛', name: '咖喱饭' },
-            { emoji: '🍕', name: '披萨' },
-            { emoji: '🍔', name: '汉堡' },
-            { emoji: '🍣', name: '寿司' },
-            { emoji: '🥘', name: '砂锅' },
-            { emoji: '🍝', name: '意面' },
-            { emoji: '🍢', name: '烧烤' },
-            { emoji: '🥗', name: '轻食沙拉' }
+            { emoji: '🍜', zh: '拉面', en: 'Ramen' },
+            { emoji: '🍚', zh: '黄焖鸡米饭', en: 'Braised chicken rice' },
+            { emoji: '🥟', zh: '饺子', en: 'Dumplings' },
+            { emoji: '🍲', zh: '麻辣烫', en: 'Malatang (spicy hot pot)' },
+            { emoji: '🍛', zh: '咖喱饭', en: 'Curry rice' },
+            { emoji: '🍕', zh: '披萨', en: 'Pizza' },
+            { emoji: '🍔', zh: '汉堡', en: 'Burger' },
+            { emoji: '🍣', zh: '寿司', en: 'Sushi' },
+            { emoji: '🥘', zh: '砂锅', en: 'Clay pot' },
+            { emoji: '🍝', zh: '意面', en: 'Pasta' },
+            { emoji: '🍢', zh: '烧烤', en: 'BBQ skewers' },
+            { emoji: '🥗', zh: '轻食沙拉', en: 'Salad' }
         ];
 
         document.getElementById('foodBtn').addEventListener('click', function () {
             var f = foods[Math.floor(Math.random() * foods.length)];
-            showToast(f.emoji, '今天吃 · ' + f.name, '不满意？关掉再点一次，直到满意为止。');
+            showToast(f.emoji, t('food_title', { name: f[lang] }), t('food_msg'));
         });
 
         /* ================= 掷骰子 / 抛硬币 / 随机数 ================= */
@@ -1041,12 +1318,12 @@
         document.getElementById('diceBtn').addEventListener('click', function () {
             var faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
             var n = randInt(1, 6);
-            showToast(faces[n - 1], '掷骰子 · ' + n + ' 点', '点数是 ' + n + '，不服再来一次。');
+            showToast(faces[n - 1], t('dice_title', { n: n }), t('dice_msg', { n: n }));
         });
 
         document.getElementById('coinBtn').addEventListener('click', function () {
             var heads = Math.random() < 0.5;
-            showToast(heads ? '🪙' : '🔘', '抛硬币 · ' + (heads ? '正面' : '反面'), '命运已经决定了，别纠结。');
+            showToast(heads ? '🪙' : '🔘', t('coin_title', { side: t(heads ? 'coin_heads' : 'coin_tails') }), t('coin_msg'));
         });
 
         /* 随机数(用户自定义范围,范围会记在浏览器里) */
@@ -1072,7 +1349,7 @@
         }
         function renderRnLabel() {
             var r = loadRn();
-            rnLabel.textContent = '随机数 ' + r.min + '–' + r.max;
+            rnLabel.textContent = t('rn_label', { a: r.min, b: r.max });
         }
 
         function openRn() {
@@ -1080,7 +1357,7 @@
             rnMin.value = r.min;
             rnMax.value = r.max;
             rnResult.textContent = '?';
-            rnHint.textContent = '范围 ' + r.min + ' 到 ' + r.max;
+            rnHint.textContent = t('rn_range', { a: r.min, b: r.max });
             lastFocused = document.activeElement;
             rnOverlay.classList.add('show');
             document.getElementById('rnGo').focus();
@@ -1094,11 +1371,11 @@
             var a = parseInt(rnMin.value, 10);
             var b = parseInt(rnMax.value, 10);
             if (!isFinite(a) || !isFinite(b)) {
-                rnHint.textContent = '请把最小值和最大值都填上（整数）';
+                rnHint.textContent = t('rn_err_empty');
                 return;
             }
             if (Math.abs(a) > RN_LIMIT || Math.abs(b) > RN_LIMIT) {
-                rnHint.textContent = '数字太大了，请控制在正负 10 亿以内';
+                rnHint.textContent = t('rn_err_big');
                 return;
             }
             if (a > b) { var t = a; a = b; b = t; }
@@ -1107,7 +1384,7 @@
             saveRn({ min: a, max: b });
             renderRnLabel();
             rnResult.textContent = randInt(a, b);
-            rnHint.textContent = '范围 ' + a + ' 到 ' + b;
+            rnHint.textContent = t('rn_range', { a: a, b: b });
         }
 
         rnBtn.addEventListener('click', openRn);
@@ -1125,6 +1402,199 @@
             if (e.key === 'Escape' && rnOverlay.classList.contains('show')) closeRn();
         });
         renderRnLabel();
+
+        /* ================= 井字棋 ================= */
+        var TTT_LINES = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+
+        /* 返回 { mark, line } 或 null */
+        function tttCheck(board) {
+            for (var i = 0; i < TTT_LINES.length; i++) {
+                var L = TTT_LINES[i];
+                if (board[L[0]] && board[L[0]] === board[L[1]] && board[L[0]] === board[L[2]]) {
+                    return { mark: board[L[0]], line: L };
+                }
+            }
+            return null;
+        }
+
+        /* 某一方再下一步就能赢的位置,没有则返回 -1 */
+        function tttWinMove(board, mark) {
+            for (var i = 0; i < TTT_LINES.length; i++) {
+                var L = TTT_LINES[i];
+                var cnt = 0, empty = -1;
+                for (var j = 0; j < 3; j++) {
+                    if (board[L[j]] === mark) cnt++;
+                    else if (!board[L[j]]) empty = L[j];
+                }
+                if (cnt === 2 && empty >= 0) return empty;
+            }
+            return -1;
+        }
+
+        /* 机器人(O):能赢就赢 → 要输就堵 → 中心 → 角 → 随机。不是无敌的,有机会赢它。 */
+        function tttBotChoose(board) {
+            var m = tttWinMove(board, 'O');
+            if (m >= 0) return m;
+            m = tttWinMove(board, 'X');
+            if (m >= 0) return m;
+            if (!board[4]) return 4;
+            var corners = [0, 2, 6, 8].filter(function (i) { return !board[i]; });
+            if (corners.length) return corners[randInt(0, corners.length - 1)];
+            var rest = [];
+            for (var i = 0; i < 9; i++) if (!board[i]) rest.push(i);
+            return rest[randInt(0, rest.length - 1)];
+        }
+
+        var tttOverlay = document.getElementById('tttOverlay');
+        var tttBoardEl = document.getElementById('tttBoard');
+        var tttStatusEl = document.getElementById('tttStatus');
+        var tttScoreEl = document.getElementById('tttScore');
+        var tttModeBtns = Array.prototype.slice.call(document.querySelectorAll('.ttt-mode button'));
+        var tttCells = [];
+        var tttMode = 'bot';          /* 'bot' | 'duo' */
+        var tttBoard = [];
+        var tttTurn = 'X';
+        var tttStarter = 'X';         /* 每一局轮流先手 */
+        var tttOver = false;
+        var tttWinLine = null;
+        var tttResult = null;         /* 'X' | 'O' | 'D' */
+        var tttTimer = null;
+        var tttScores = { bot: { x: 0, o: 0, d: 0 }, duo: { x: 0, o: 0, d: 0 } };
+
+        (function buildTttBoard() {
+            for (var i = 0; i < 9; i++) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'ttt-cell';
+                b.setAttribute('data-i', String(i));
+                tttBoardEl.appendChild(b);
+                tttCells.push(b);
+            }
+        })();
+
+        function tttNames() {
+            return tttMode === 'duo' ? [t('rps_p1'), t('rps_p2')] : [t('rps_you'), t('rps_bot')];
+        }
+
+        function renderTtt() {
+            var nm = tttNames();
+            var winKeys = tttMode === 'duo' ? ['rps_win_p1', 'rps_win_p2'] : ['rps_win_you', 'rps_win_bot'];
+            var botTurn = tttMode === 'bot' && tttTurn === 'O';
+            var i, mark, cell;
+
+            for (i = 0; i < 9; i++) {
+                mark = tttBoard[i] || '';
+                cell = tttCells[i];
+                cell.textContent = mark;
+                cell.className = 'ttt-cell' + (mark === 'X' ? ' x' : mark === 'O' ? ' o' : '') +
+                                 (tttWinLine && tttWinLine.indexOf(i) > -1 ? ' win' : '');
+                cell.disabled = !!mark || tttOver || botTurn;
+                cell.setAttribute('aria-label',
+                    mark ? t('ttt_cell_marked', { n: i + 1, mark: mark }) : t('ttt_cell', { n: i + 1 }));
+            }
+
+            if (tttOver) {
+                tttStatusEl.textContent = tttResult === 'D' ? t('rps_draw')
+                                        : t(winKeys[tttResult === 'X' ? 0 : 1]);
+            } else {
+                tttStatusEl.textContent = t('ttt_turn', { name: tttTurn === 'X' ? nm[0] : nm[1], mark: tttTurn });
+            }
+
+            var sc = tttScores[tttMode];
+            tttScoreEl.textContent = t('rps_score', { a: nm[0], x: sc.x, y: sc.o, b: nm[1], d: sc.d });
+
+            tttModeBtns.forEach(function (btn) {
+                var on = btn.getAttribute('data-mode') === tttMode;
+                btn.classList.toggle('on', on);
+                btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+            });
+        }
+
+        function tttScheduleBot() {
+            if (tttMode !== 'bot' || tttTurn !== 'O' || tttOver) return;
+            tttTimer = setTimeout(function () {
+                tttTimer = null;
+                if (tttOver || tttTurn !== 'O') return;
+                tttPlace(tttBotChoose(tttBoard));
+            }, 380);
+        }
+
+        function tttPlace(i) {
+            var sc = tttScores[tttMode];
+            tttBoard[i] = tttTurn;
+            var w = tttCheck(tttBoard);
+            if (w) {
+                tttOver = true;
+                tttWinLine = w.line;
+                tttResult = w.mark;
+                if (w.mark === 'X') sc.x++; else sc.o++;
+            } else if (tttBoard.every(function (c) { return !!c; })) {
+                tttOver = true;
+                tttResult = 'D';
+                sc.d++;
+            } else {
+                tttTurn = tttTurn === 'X' ? 'O' : 'X';
+            }
+            renderTtt();
+            if (!tttOver) tttScheduleBot();
+        }
+
+        function startTttRound() {
+            if (tttTimer) { clearTimeout(tttTimer); tttTimer = null; }
+            tttBoard = ['', '', '', '', '', '', '', '', ''];
+            tttOver = false;
+            tttWinLine = null;
+            tttResult = null;
+            tttTurn = tttStarter;
+            renderTtt();
+            tttScheduleBot();
+        }
+
+        function openTtt() {
+            lastFocused = document.activeElement;
+            tttStarter = 'X';
+            startTttRound();
+            tttOverlay.classList.add('show');
+            document.getElementById('tttNew').focus();
+        }
+        function closeTtt() {
+            if (tttTimer) { clearTimeout(tttTimer); tttTimer = null; }
+            tttOverlay.classList.remove('show');
+            if (lastFocused && lastFocused.focus) lastFocused.focus();
+        }
+
+        tttBoardEl.addEventListener('click', function (e) {
+            var btn = e.target.closest('button[data-i]');
+            if (!btn) return;
+            var i = parseInt(btn.getAttribute('data-i'), 10);
+            if (tttOver || tttBoard[i] || (tttMode === 'bot' && tttTurn === 'O')) return;
+            tttPlace(i);
+        });
+        tttModeBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                tttMode = btn.getAttribute('data-mode');
+                tttStarter = 'X';
+                startTttRound();
+            });
+        });
+        document.getElementById('tttNew').addEventListener('click', function () {
+            if (tttOver) tttStarter = tttStarter === 'X' ? 'O' : 'X';   /* 打完一局后换先手 */
+            startTttRound();
+        });
+        document.getElementById('tttReset').addEventListener('click', function () {
+            tttScores[tttMode] = { x: 0, o: 0, d: 0 };
+            tttStarter = 'X';
+            startTttRound();
+        });
+        document.getElementById('tttClose').addEventListener('click', closeTtt);
+        tttOverlay.addEventListener('click', function (e) {
+            if (e.target === tttOverlay) closeTtt();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && tttOverlay.classList.contains('show')) closeTtt();
+        });
+        document.getElementById('tttBtn').addEventListener('click', openTtt);
+        startTttRound();
 
         /* ================= 贪吃蛇 ================= */
         var SNAKE_GRID = 15;
@@ -1145,7 +1615,7 @@
         var snakeScoreVal = 0;
         var snakeBest = parseInt(safeGet('snakeBest'), 10) || 0;
         var snakeTimer = null;
-        var snakeEndText = '游戏结束';
+        var snakeEndKey = 'snake_over';
 
         (function initSnakeCanvas() {
             var dpr = window.devicePixelRatio || 1;
@@ -1203,9 +1673,9 @@
             }
 
             if (snakeState !== 'running') {
-                var text = snakeState === 'idle' ? '按方向键或点「开始」'
-                         : snakeState === 'paused' ? '已暂停'
-                         : snakeEndText + ' · 得分 ' + snakeScoreVal;
+                var text = snakeState === 'idle' ? t('snake_idle')
+                         : snakeState === 'paused' ? t('snake_paused')
+                         : t(snakeEndKey) + t('snake_score_suffix', { n: snakeScoreVal });
                 snakeCtx.fillStyle = c.mask;
                 snakeCtx.fillRect(0, 0, size, size);
                 snakeCtx.fillStyle = c.text;
@@ -1217,12 +1687,12 @@
         }
 
         function updateSnakeUI() {
-            snakeScoreEl.textContent = '得分 ' + snakeScoreVal;
-            snakeBestEl.textContent = '最高 ' + snakeBest;
-            snakeToggleBtn.textContent = snakeState === 'running' ? '暂停'
-                                       : snakeState === 'paused' ? '继续'
-                                       : snakeState === 'over' ? '重新开始'
-                                       : '开始';
+            snakeScoreEl.textContent = t('snake_score', { n: snakeScoreVal });
+            snakeBestEl.textContent = t('snake_best', { n: snakeBest });
+            snakeToggleBtn.textContent = snakeState === 'running' ? t('snake_pause')
+                                       : snakeState === 'paused' ? t('snake_resume')
+                                       : snakeState === 'over' ? t('snake_restart')
+                                       : t('snake_start');
         }
 
         function placeSnakeFood() {
@@ -1248,7 +1718,7 @@
             snakeDir = { x: 1, y: 0 };
             snakeQueue = [];
             snakeScoreVal = 0;
-            snakeEndText = '游戏结束';
+            snakeEndKey = 'snake_over';
             snakeState = 'idle';
             placeSnakeFood();
             updateSnakeUI();
@@ -1277,7 +1747,7 @@
         function endSnake(win) {
             if (snakeTimer) { clearTimeout(snakeTimer); snakeTimer = null; }
             snakeState = 'over';
-            snakeEndText = win ? '通关！' : '游戏结束';
+            snakeEndKey = win ? 'snake_win' : 'snake_over';
             updateSnakeUI();
             drawSnake();
         }
@@ -1449,26 +1919,30 @@
             return ((a - b + 3) % 3 === 2) ? 1 : 2;
         }
 
+        function rpsName(i) {
+            return t(['rps_rock', 'rps_scissors', 'rps_paper'][i]);
+        }
+
         function rpsNames() {
-            return rpsMode === 'duo' ? ['玩家 1', '玩家 2'] : ['你', '机器人'];
+            return rpsMode === 'duo' ? [t('rps_p1'), t('rps_p2')] : [t('rps_you'), t('rps_bot')];
         }
 
         function renderRpsScore() {
             var sc = rpsScores[rpsMode];
             var nm = rpsNames();
-            rpsScore.textContent = '比分  ' + nm[0] + ' ' + sc.a + ' : ' + sc.b + ' ' + nm[1] + '  ·  平局 ' + sc.d;
+            rpsScore.textContent = t('rps_score', { a: nm[0], x: sc.a, y: sc.b, b: nm[1], d: sc.d });
         }
 
         function setRpsStep(step) {
             var duo = rpsMode === 'duo';
             rpsStep = step;
-            rpsTitle.textContent = duo ? '猜拳 · 面对面' : '猜拳 · 对战机器人';
+            rpsTitle.textContent = t(duo ? 'rps_title_duo' : 'rps_title_bot');
             if (step === 'p1') {
                 rpsStage.textContent = '❔';
-                rpsHint.textContent = duo ? '玩家 1 请选择（选完把设备交给对方）' : '出招吧，选一个';
+                rpsHint.textContent = t(duo ? 'rps_hint_p1' : 'rps_hint_bot');
             } else if (step === 'p2') {
                 rpsStage.textContent = '🙈';
-                rpsHint.textContent = '玩家 2 请选择（玩家 1 不要偷看哦）';
+                rpsHint.textContent = t('rps_hint_p2');
             }
             rpsChoices.hidden = false;
             rpsAgain.hidden = true;
@@ -1478,13 +1952,13 @@
         function showRpsResult(a, b) {
             var duo = rpsMode === 'duo';
             var sc = rpsScores[rpsMode];
-            var nm = rpsNames();
+            var winKeys = duo ? ['rps_win_p1', 'rps_win_p2'] : ['rps_win_you', 'rps_win_bot'];
             var w = rpsWinner(a, b);
             if (w === 1) sc.a++; else if (w === 2) sc.b++; else sc.d++;
             rpsStep = 'result';
             rpsStage.textContent = RPS[a].e + '  vs  ' + RPS[b].e;
-            rpsHint.textContent = RPS[a].n + ' 对 ' + RPS[b].n + '，' +
-                (w === 0 ? '平局！' : nm[w - 1] + '赢了！');
+            rpsHint.textContent = t('rps_vs', { A: rpsName(a), B: rpsName(b) }) +
+                (w === 0 ? t('rps_draw') : t(winKeys[w - 1]));
             if (duo) {
                 rpsChoices.hidden = true;
                 rpsAgain.hidden = false;
@@ -1573,24 +2047,30 @@
             return Math.round((target - today) / 86400000);
         }
 
+        function cdDisplayName(cd) {
+            return cd.name || t('cd_default_name');
+        }
+
         function describeCd(cd) {
             var days = daysLeft(cd.date);
-            if (days > 0)  return '距离「' + cd.name + '」还有 ' + days + ' 天';
-            if (days === 0) return '「' + cd.name + '」就是今天！';
-            return '「' + cd.name + '」已经过去 ' + (-days) + ' 天';
+            var name = cdDisplayName(cd);
+            if (days > 0)   return t(days === 1 ? 'cd_left_one' : 'cd_left', { name: name, n: days });
+            if (days === 0) return t('cd_today', { name: name });
+            return t(days === -1 ? 'cd_past_one' : 'cd_past', { name: name, n: -days });
         }
 
         function renderCd() {
             var cd = loadCd();
             if (!cd) {
-                cdLabel.textContent = '倒计时';
-                cdResult.textContent = '还没有设置目标日期';
+                cdLabel.textContent = t('cd_title');
+                cdResult.textContent = t('cd_none');
                 return;
             }
             var days = daysLeft(cd.date);
-            cdLabel.textContent = days > 0 ? cd.name + ' ' + days + ' 天'
-                                : days === 0 ? cd.name + ' 今天'
-                                : '倒计时';
+            var name = cdDisplayName(cd);
+            cdLabel.textContent = days > 0 ? t('cd_label_days', { name: name, n: days })
+                                : days === 0 ? t('cd_label_today', { name: name })
+                                : t('cd_title');
             cdResult.textContent = describeCd(cd);
         }
 
@@ -1619,11 +2099,11 @@
 
         document.getElementById('cdSave').addEventListener('click', function () {
             if (!cdDate.value) {
-                cdResult.textContent = '请先选择一个目标日期';
+                cdResult.textContent = t('cd_need_date');
                 cdDate.focus();
                 return;
             }
-            saveCd({ name: cdName.value.trim() || '目标日', date: cdDate.value });
+            saveCd({ name: cdName.value.trim(), date: cdDate.value });
             renderCd();
         });
         document.getElementById('cdClear').addEventListener('click', function () {
@@ -1637,7 +2117,7 @@
 
         /* ================= 一键写完作业（假的） ================= */
         document.getElementById('homeworkBtn').addEventListener('click', function () {
-            showToast('🚀', '启动失败', '作业引擎正在开发中……（其实永远不会开发）');
+            showToast('🚀', t('hw_title'), t('hw_msg'));
         });
 
         /* ================= 鼠标跟随光点 ================= */
@@ -1730,6 +2210,8 @@
                 isDown = false;
             });
         })();
+
+        applyLang();
 
         /* ================= 卡片入场 ================= */
         var items  = Array.prototype.slice.call(document.querySelectorAll('.link-item'));
