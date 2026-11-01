@@ -151,6 +151,9 @@
             color: #d4d4d8;
             font-size: 0.85rem;
             font-weight: 500;
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
             transition: background 0.15s ease, border-color 0.15s ease,
                         color 0.15s ease, transform 0.15s ease;
             white-space: nowrap;
@@ -397,7 +400,7 @@
             background: rgba(180, 150, 100, 0.2);
         }
 
-        /* ===== 鼠标跟随光点（恢复） ===== */
+        /* ===== 鼠标跟随光点 ===== */
         .cursor-dot {
             position: fixed;
             width: 10px;
@@ -440,6 +443,21 @@
             }
         }
 
+        /* ===== 点击爆星星 ===== */
+        .click-star {
+            position: fixed;
+            pointer-events: none;
+            font-size: 1rem;
+            z-index: 9999;
+            user-select: none;
+            animation: starFloat 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes starFloat {
+            0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -180%) scale(1.6); }
+        }
+
         @media (max-width: 600px) {
             .hero { min-height: 35vh; padding: 0 1.25rem; }
             .hero h1 { font-size: 1.9rem; }
@@ -471,6 +489,7 @@
             .link-item:active { transform: none; }
             .cursor-dot { display: none; }
             .star-trail { display: none !important; }
+            .click-star { animation: none !important; opacity: 0 !important; }
         }
     </style>
 </head>
@@ -508,18 +527,18 @@
             </a>
 
             <!-- 今日运势 -->
-            <a href="javascript:void(0)" class="link-item" id="fortuneBtn">
+            <button type="button" class="link-item" id="fortuneBtn">
                 <span class="ico" aria-hidden="true">🔮</span>
                 <span>今日运势</span>
                 <span class="arrow" aria-hidden="true">↗</span>
-            </a>
+            </button>
 
             <!-- 一键写完作业（假的） -->
-            <a href="javascript:void(0)" class="link-item" id="homeworkBtn">
+            <button type="button" class="link-item" id="homeworkBtn">
                 <span class="ico" aria-hidden="true">🚀</span>
                 <span>一键写完作业</span>
                 <span class="arrow" aria-hidden="true">↗</span>
-            </a>
+            </button>
         </div>
     </div>
 
@@ -640,6 +659,7 @@
 
         document.getElementById('fortuneBtn').addEventListener('click', function (e) {
             e.preventDefault();
+            // 用日期做种子，同一天结果固定
             var d = new Date();
             var seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
             var idx = seed % fortunes.length;
@@ -672,9 +692,10 @@
             dot.style.display = 'none';
         }
 
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
         /* ================= 长按鼠标 → 连续爆星星拖尾 ================= */
         (function () {
-            var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (reduceMotion) return;
             if (!hasPointer) return;
 
@@ -747,46 +768,49 @@
             });
         })();
 
+        /* ================= 点击爆星星 ================= */
+        var clickStarChars = ['✨', '⭐', '💫', '🌟', '✦'];
+
+        document.addEventListener('click', function (e) {
+            if (reduceMotion) return;
+            // 点在卡片或按钮上不触发，避免干扰
+            if (e.target.closest('a, button, input, textarea')) return;
+
+            var star = document.createElement('span');
+            star.className = 'click-star';
+            star.textContent = clickStarChars[Math.floor(Math.random() * clickStarChars.length)];
+            star.style.left = e.clientX + 'px';
+            star.style.top = e.clientY + 'px';
+            document.body.appendChild(star);
+            setTimeout(function () { star.remove(); }, 900);
+        });
+
         /* ================= 卡片入场 ================= */
         var items  = Array.prototype.slice.call(document.querySelectorAll('.link-item'));
         var footer = document.querySelector('.footer-note');
 
-        items.forEach(function (el, i) {
-            el.style.setProperty('--delay', (i * 0.05) + 's');
+        items.forEach(function (el, i) {        items.forEach(function (el, i) {
+            el.style.setProperty('--delay', (i * 0.06) + 's');
         });
 
-        function reveal(el) { el.classList.add('is-visible'); }
-
-        if (reduceMotion) {
-            items.forEach(reveal);
-            if (footer) footer.classList.add('is-visible');
-        } else if ('IntersectionObserver' in window) {
-            var io = new IntersectionObserver(function (entries, observer) {
+        if ('IntersectionObserver' in window) {
+            var io = new IntersectionObserver(function (entries) {
                 entries.forEach(function (entry) {
                     if (entry.isIntersecting) {
-                        reveal(entry.target);
-                        observer.unobserve(entry.target);
+                        entry.target.classList.add('is-visible');
+                        io.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-            items.forEach(function (el) { io.observe(el); });
+            }, { threshold: 0.1 });
 
-            if (footer) {
-                var footerIO = new IntersectionObserver(function (entries, observer) {
-                    entries.forEach(function (entry) {
-                        if (entry.isIntersecting) {
-                            footer.classList.add('is-visible');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.1 });
-                footerIO.observe(footer);
-            }
+            items.forEach(function (el) { io.observe(el); });
+            if (footer) io.observe(footer);
         } else {
-            items.forEach(reveal);
+            items.forEach(function (el) { el.classList.add('is-visible'); });
             if (footer) footer.classList.add('is-visible');
         }
+
     })();
     </script>
 </body>
-</html>
+</html>  
