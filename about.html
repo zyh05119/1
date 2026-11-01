@@ -48,7 +48,6 @@
             text-transform: uppercase;
             letter-spacing: 0.08em;
             margin-bottom: 0.8rem;
-            scroll-margin-top: 2rem;
         }
 
         .section p {
@@ -57,37 +56,6 @@
             color: #b4b4bb;
         }
         .section p + p { margin-top: 0.8rem; }
-
-        .section a {
-            color: #60a5fa;
-            text-decoration: none;
-        }
-        .section a:hover { text-decoration: underline; }
-
-        .contact-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-        }
-
-        .contact-list a {
-            color: #d4d4d8;
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: color 0.15s;
-        }
-        .contact-list a:hover { color: #60a5fa; }
-
-        .divider-line {
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(to right, #2e2e2e, transparent);
-            margin: 2.5rem 0;
-        }
 
         .footer-note {
             text-align: center;
@@ -110,8 +78,7 @@
         <h1>冷涩调</h1>
         <p class="sub">P5G的一个乐乐</p>
 
-        <!-- ===== about me ===== -->
-        <div class="section" id="about">
+        <div class="section">
             <h2>about me</h2>
             <p>
                 哈喽这里是冷涩调，一个喜欢二次元和音乐的妹子。
@@ -124,75 +91,9 @@
             </p>
         </div>
 
-        <!-- ===== 报告问题（首页 #bug 直达） ===== -->
-        <div class="section" id="bug">
-            <h2>报告问题</h2>
-            <p>
-                工具链接打不开，功能异常，页面显示错乱？<br>
-                email <a href="mailto:zyh0197@gmail.com">zyh0197@gmail.com</a> 吧！
-            </p>
-        </div>
-
-        <!-- ===== 工具建议（首页 #suggest 直达） ===== -->
-        <div class="section" id="suggest">
-            <h2>工具建议</h2>
-            <p>
-                想要什么新东西？觉得可以做得更好？
-                 <a href="mailto:zyh0197@gmail.com">zyh0197@gmail.com</a>，
-                或者加whatsapp <strong>81790196</strong>，我会认真看。
-            </p>
-        </div>
-
-        <div class="divider-line"></div>
-
-        <!-- ===== 联系方式（首页 #feedback 直达） ===== -->
-        <div class="section" id="feedback">
-            <h2>contact</h2>
-            <ul class="contact-list">
-                <li>
-                    <a href="mailto:zyh0197@gmail.com">
-                        <span aria-hidden="true">📧</span> zyh0197@gmail.com
-                    </a>
-                </li>
-                <li>
-                    <a href="https://github.com/Zain-1919" target="_blank" rel="noopener noreferrer">
-                        <span aria-hidden="true">wechat</span> Zain-1919
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)" id="qq-copy" title="点击复制 QQ 号">
-                        <span aria-hidden="true">💬</span> 81790196
-                    </a>
-                </li>
-            </ul>
-        </div>
-
         <div class="footer-note">
             天天开心 大家
         </div>
     </div>
-
-    <script>
-    (function () {
-        // 点击 QQ 号复制到剪贴板
-        var qq = document.getElementById('qq-copy');
-        if (!qq) return;
-        qq.addEventListener('click', function (e) {
-            e.preventDefault();
-            var num = '81790196';
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(num).then(function () {
-                    var old = qq.textContent;
-                    qq.textContent = '💬 已复制！';
-                    setTimeout(function () { qq.textContent = old; }, 1200);
-                }).catch(function () {
-                    alert('QQ：' + num);
-                });
-            } else {
-                alert('QQ：' + num);
-            }
-        });
-    })();
-    </script>
 </body>
 </html>
