@@ -20,7 +20,6 @@
             transition: background-color 0.4s ease, color 0.3s ease;
         }
 
-        /* ===== 米色浅色模式 ===== */
         body.light-mode {
             background-color: #f5f0e6;
             color: #3a3528;
@@ -31,7 +30,6 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== 粒子背景 ===== */
         body::after {
             content: '';
             position: fixed;
@@ -104,7 +102,6 @@
             animation: fadeInLeft 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
             transition: color 0.3s ease;
         }
-
         body.light-mode .hero h1 { color: #2a2418; }
         body.light-mode .hero p  { color: #8a7f68; }
 
@@ -160,7 +157,6 @@
             text-overflow: ellipsis;
             opacity: 0;
         }
-
         body.light-mode .link-item {
             background: #fbf7ee;
             border-color: #e6ddc9;
@@ -190,11 +186,7 @@
         }
 
         .link-item:active { transform: scale(0.97); }
-
-        .link-item:focus-visible {
-            outline: 2px solid #c9a86a;
-            outline-offset: 2px;
-        }
+        .link-item:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
 
         .link-item .ico {
             font-size: 0.95rem;
@@ -239,16 +231,9 @@
             transition: border-color 0.15s, color 0.15s;
         }
         body.light-mode .footer-note a { color: #b8904a; }
-        .footer-note a:hover {
-            color: #93c5fd;
-            border-bottom-color: #93c5fd;
-        }
-        body.light-mode .footer-note a:hover {
-            color: #9c7a3a;
-            border-bottom-color: #9c7a3a;
-        }
+        .footer-note a:hover { color: #93c5fd; border-bottom-color: #93c5fd; }
+        body.light-mode .footer-note a:hover { color: #9c7a3a; border-bottom-color: #9c7a3a; }
 
-        /* ===== 右上角主题切换 ===== */
         .theme-toggle {
             position: fixed;
             top: 16px;
@@ -279,19 +264,12 @@
             box-shadow: 0 0 20px rgba(200, 180, 80, 0.06);
         }
         .theme-toggle:active { transform: scale(0.92); }
-
         body.light-mode .theme-toggle {
             background: rgba(255, 250, 240, 0.8);
             border-color: rgba(180, 150, 100, 0.25);
             color: #a8863a;
         }
-        body.light-mode .theme-toggle:hover {
-            background: rgba(255, 250, 240, 0.95);
-            border-color: rgba(180, 150, 100, 0.4);
-            box-shadow: 0 0 20px rgba(180, 150, 80, 0.12);
-        }
 
-        /* ===== 右下角天气 ===== */
         .weather-corner {
             position: fixed;
             bottom: 20px;
@@ -321,17 +299,9 @@
             color: rgba(120, 100, 70, 0.75);
             box-shadow: 0 4px 20px rgba(120, 100, 60, 0.08);
         }
-
-        .weather-corner .w-icon {
-            font-size: 0.9rem;
-            line-height: 1;
-        }
-        .weather-corner .w-temp {
-            font-weight: 400;
-            color: rgba(200, 220, 225, 0.7);
-        }
+        .weather-corner .w-icon { font-size: 0.9rem; line-height: 1; }
+        .weather-corner .w-temp { font-weight: 400; color: rgba(200, 220, 225, 0.7); }
         body.light-mode .weather-corner .w-temp { color: rgba(120, 100, 70, 0.9); }
-
         .weather-corner .w-city {
             font-size: 0.6rem;
             opacity: 0.55;
@@ -339,7 +309,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        body.light-mode .weather-corner .w-city { opacity: 0.7; }
 
         @media (max-width: 600px) {
             .hero { min-height: 35vh; padding: 0 1.25rem; }
@@ -410,38 +379,52 @@
     (function () {
         'use strict';
 
+        console.log('[冷涩调] script loaded');
+
         /* ================= 主题切换 ================= */
         var toggleBtn = document.getElementById('themeToggle');
-        var isLight = localStorage.getItem('theme') === 'light';
-
-        if (isLight) {
-            document.body.classList.add('light-mode');
-            toggleBtn.textContent = '☀';
-        }
-
-        toggleBtn.addEventListener('click', function () {
-            isLight = !isLight;
+        if (!toggleBtn) {
+            console.warn('[冷涩调] themeToggle 元素没找到');
+        } else {
+            var isLight = localStorage.getItem('theme') === 'light';
             if (isLight) {
                 document.body.classList.add('light-mode');
                 toggleBtn.textContent = '☀';
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.body.classList.remove('light-mode');
-                toggleBtn.textContent = '✦';
-                localStorage.setItem('theme', 'dark');
             }
-        });
 
-        /* ================= 天气 ================= */
+            toggleBtn.addEventListener('click', function () {
+                isLight = !isLight;
+                if (isLight) {
+                    document.body.classList.add('light-mode');
+                    toggleBtn.textContent = '☀';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.body.classList.remove('light-mode');
+                    toggleBtn.textContent = '✦';
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        }
+
+        /* ================= 天气（容错版） ================= */
         function getWeather() {
             var tempEl = document.getElementById('weatherTemp');
             var cityEl = document.getElementById('weatherCity');
             var iconEl = document.getElementById('weatherIcon');
 
-            var controller = new AbortController();
-            var timeoutId = setTimeout(function () { controller.abort(); }, 6000);
+            if (!tempEl || !cityEl || !iconEl) {
+                console.warn('[冷涩调] 天气 DOM 元素缺失');
+                return;
+            }
 
-            fetch('https://wttr.in?format=j1&lang=zh', { signal: controller.signal })
+            var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+            var timeoutId = setTimeout(function () {
+                if (controller) controller.abort();
+            }, 6000);
+
+            var opts = controller ? { signal: controller.signal } : {};
+
+            fetch('https://wttr.in?format=j1&lang=zh', opts)
                 .then(function (res) {
                     clearTimeout(timeoutId);
                     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -475,9 +458,12 @@
                     iconEl.textContent = iconMap[code] || '🌤';
                     tempEl.textContent = temp + '°';
                     cityEl.textContent = city.length > 6 ? city.slice(0, 6) : city;
+                    console.log('[冷涩调] 天气已加载：', temp + '°', city);
                 })
-                .catch(function () {
+                .catch(function (err) {
                     clearTimeout(timeoutId);
+                    // 天气失败不影响页面，静默处理
+                    console.info('[冷涩调] 天气获取失败（不影响使用）：', err.message);
                 });
         }
         getWeather();
@@ -495,7 +481,7 @@
 
         if (reduceMotion) {
             items.forEach(reveal);
-            footer.classList.add('is-visible');
+            if (footer) footer.classList.add('is-visible');
         } else if ('IntersectionObserver' in window) {
             var io = new IntersectionObserver(function (entries, observer) {
                 entries.forEach(function (entry) {
@@ -507,18 +493,20 @@
             }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
             items.forEach(function (el) { io.observe(el); });
 
-            var footerIO = new IntersectionObserver(function (entries, observer) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        footer.classList.add('is-visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1 });
-            footerIO.observe(footer);
+            if (footer) {
+                var footerIO = new IntersectionObserver(function (entries, observer) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            footer.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                footerIO.observe(footer);
+            }
         } else {
             items.forEach(reveal);
-            footer.classList.add('is-visible');
+            if (footer) footer.classList.add('is-visible');
         }
     })();
     </script>
