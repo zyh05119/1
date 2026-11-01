@@ -470,6 +470,114 @@
         body.light-mode .cd-form .rn-row { color: #6a5a48; }
         .cd-form .rn-row input { flex: 1; min-width: 0; text-align: center; }
 
+        /* ===== 石头剪刀布 ===== */
+        .rps-score {
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            color: rgba(150, 180, 190, 0.6);
+            margin-bottom: 16px;
+        }
+        body.light-mode .rps-score { color: #8a7f68; }
+        .rps-choices {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .rps-choices[hidden] { display: none; }
+        .rps-choices button {
+            flex: 1;
+            font-size: 1.8rem;
+            line-height: 1;
+            padding: 12px 0;
+            border-radius: 12px;
+            border: 1px solid rgba(60, 110, 120, 0.2);
+            background: rgba(60, 110, 120, 0.06);
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, transform 0.15s;
+        }
+        .rps-choices button:hover {
+            background: rgba(60, 110, 120, 0.15);
+            border-color: #3b82f6;
+            transform: translateY(-1px);
+        }
+        .rps-choices button:active { transform: scale(0.94); }
+        .rps-choices button:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
+        body.light-mode .rps-choices button {
+            border-color: rgba(180, 150, 100, 0.3);
+            background: rgba(180, 150, 100, 0.08);
+        }
+        body.light-mode .rps-choices button:hover {
+            background: rgba(180, 150, 100, 0.18);
+            border-color: #c9a86a;
+        }
+
+        /* ===== 贪吃蛇 ===== */
+        .toast-box.snake-box {
+            max-width: 380px;
+            padding: 22px 22px 20px;
+            max-height: 96vh;
+            overflow-y: auto;
+        }
+        .snake-box .title { margin-bottom: 10px; }
+        .snake-score {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            color: rgba(150, 180, 190, 0.75);
+            margin-bottom: 10px;
+        }
+        body.light-mode .snake-score { color: #6a5a48; }
+        .snake-canvas {
+            display: block;
+            width: 100%;
+            max-width: 340px;
+            height: auto;
+            aspect-ratio: 1;
+            margin: 0 auto 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(60, 110, 120, 0.2);
+            touch-action: none;
+        }
+        body.light-mode .snake-canvas { border-color: rgba(180, 150, 100, 0.3); }
+        .snake-hint {
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            line-height: 1.5;
+            color: rgba(150, 180, 190, 0.6);
+            margin-bottom: 14px;
+        }
+        body.light-mode .snake-hint { color: #8a7f68; }
+        .snake-pad {
+            display: none;
+            grid-template-columns: repeat(3, 52px);
+            grid-template-rows: repeat(2, 44px);
+            gap: 6px;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+        @media (pointer: coarse) { .snake-pad { display: grid; } }
+        .snake-pad button {
+            border-radius: 12px;
+            border: 1px solid rgba(60, 110, 120, 0.2);
+            background: rgba(60, 110, 120, 0.06);
+            color: #c8d8dc;
+            font-size: 1.1rem;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .snake-pad button:active { background: rgba(60, 110, 120, 0.2); }
+        body.light-mode .snake-pad button {
+            border-color: rgba(180, 150, 100, 0.3);
+            background: rgba(180, 150, 100, 0.08);
+            color: #4a4232;
+        }
+        .snake-pad [data-d="up"]    { grid-column: 2; grid-row: 1; }
+        .snake-pad [data-d="left"]  { grid-column: 1; grid-row: 2; }
+        .snake-pad [data-d="down"]  { grid-column: 2; grid-row: 2; }
+        .snake-pad [data-d="right"] { grid-column: 3; grid-row: 2; }
+
         /* ===== 鼠标跟随光点 ===== */
         .cursor-dot {
             position: fixed;
@@ -640,6 +748,27 @@
                 <span class="arrow" aria-hidden="true">↗</span>
             </button>
 
+            <!-- 猜拳:对战机器人 -->
+            <button type="button" class="link-item" id="rpsBotBtn">
+                <span class="ico" aria-hidden="true">🤖</span>
+                <span class="label">猜拳 · 机器人</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </button>
+
+            <!-- 猜拳:面对面 -->
+            <button type="button" class="link-item" id="rpsDuoBtn">
+                <span class="ico" aria-hidden="true">🤝</span>
+                <span class="label">猜拳 · 面对面</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </button>
+
+            <!-- 贪吃蛇 -->
+            <button type="button" class="link-item" id="snakeBtn">
+                <span class="ico" aria-hidden="true">🐍</span>
+                <span class="label">贪吃蛇</span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </button>
+
             <!-- 倒计时 -->
             <button type="button" class="link-item" id="countdownBtn">
                 <span class="ico" aria-hidden="true">⏳</span>
@@ -667,6 +796,49 @@
             <div class="title" id="toastTitle">今日运势</div>
             <div class="msg" id="toastMsg">…</div>
             <button type="button" class="btn-close" id="toastCloseBtn">知道了</button>
+        </div>
+    </div>
+
+    <!-- 贪吃蛇弹窗 -->
+    <div class="toast-overlay" id="snakeOverlay">
+        <div class="toast-box snake-box" role="dialog" aria-modal="true" aria-labelledby="snakeTitle">
+            <div class="title" id="snakeTitle">贪吃蛇</div>
+            <div class="snake-score">
+                <span id="snakeScore">得分 0</span>
+                <span id="snakeBest">最高 0</span>
+            </div>
+            <canvas id="snakeCanvas" class="snake-canvas" aria-label="贪吃蛇游戏画面"></canvas>
+            <div class="snake-hint" id="snakeHint">方向键或 WASD 控制，空格暂停；手机上直接在画面上滑动</div>
+            <div class="snake-pad" id="snakePad">
+                <button type="button" data-d="up" aria-label="上">▲</button>
+                <button type="button" data-d="left" aria-label="左">◀</button>
+                <button type="button" data-d="down" aria-label="下">▼</button>
+                <button type="button" data-d="right" aria-label="右">▶</button>
+            </div>
+            <div class="cd-actions">
+                <button type="button" class="btn-close" id="snakeToggle">开始</button>
+                <button type="button" class="btn-close" id="snakeClose">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 猜拳弹窗 -->
+    <div class="toast-overlay" id="rpsOverlay">
+        <div class="toast-box" role="dialog" aria-modal="true" aria-labelledby="rpsTitle">
+            <div class="title" id="rpsTitle">猜拳</div>
+            <div class="rn-result" id="rpsStage" aria-live="polite">❔</div>
+            <div class="msg" id="rpsHint">出招吧，选一个</div>
+            <div class="rps-score" id="rpsScore"></div>
+            <div class="rps-choices" id="rpsChoices">
+                <button type="button" data-i="0" aria-label="石头">✊</button>
+                <button type="button" data-i="1" aria-label="剪刀">✌️</button>
+                <button type="button" data-i="2" aria-label="布">✋</button>
+            </div>
+            <div class="cd-actions">
+                <button type="button" class="btn-close" id="rpsAgain" hidden>再来一局</button>
+                <button type="button" class="btn-close" id="rpsReset">清零比分</button>
+                <button type="button" class="btn-close" id="rpsClose">关闭</button>
+            </div>
         </div>
     </div>
 
@@ -953,6 +1125,422 @@
             if (e.key === 'Escape' && rnOverlay.classList.contains('show')) closeRn();
         });
         renderRnLabel();
+
+        /* ================= 贪吃蛇 ================= */
+        var SNAKE_GRID = 15;
+        var SNAKE_CELL = 20;
+        var snakeOverlay = document.getElementById('snakeOverlay');
+        var snakeCanvas  = document.getElementById('snakeCanvas');
+        var snakeCtx     = snakeCanvas.getContext('2d');
+        var snakeScoreEl = document.getElementById('snakeScore');
+        var snakeBestEl  = document.getElementById('snakeBest');
+        var snakeHintEl  = document.getElementById('snakeHint');
+        var snakeToggleBtn = document.getElementById('snakeToggle');
+
+        var snakeState = 'idle';      /* idle | running | paused | over */
+        var snake = [];
+        var snakeDir = { x: 1, y: 0 };
+        var snakeQueue = [];
+        var snakeFood = { x: 0, y: 0 };
+        var snakeScoreVal = 0;
+        var snakeBest = parseInt(safeGet('snakeBest'), 10) || 0;
+        var snakeTimer = null;
+        var snakeEndText = '游戏结束';
+
+        (function initSnakeCanvas() {
+            var dpr = window.devicePixelRatio || 1;
+            var size = SNAKE_GRID * SNAKE_CELL;
+            snakeCanvas.width = size * dpr;
+            snakeCanvas.height = size * dpr;
+            snakeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        })();
+
+        function snakeRoundRect(x, y, w, h, r) {
+            snakeCtx.beginPath();
+            snakeCtx.moveTo(x + r, y);
+            snakeCtx.arcTo(x + w, y, x + w, y + h, r);
+            snakeCtx.arcTo(x + w, y + h, x, y + h, r);
+            snakeCtx.arcTo(x, y + h, x, y, r);
+            snakeCtx.arcTo(x, y, x + w, y, r);
+            snakeCtx.closePath();
+            snakeCtx.fill();
+        }
+
+        function drawSnake() {
+            var light = document.body.classList.contains('light-mode');
+            var c = light
+                ? { bg: '#fbf7ee', grid: 'rgba(120,100,70,0.08)', body: '#c9a86a', head: '#9c7a3a',
+                    food: '#c0583f', text: '#4a4232', mask: 'rgba(251,247,238,0.78)' }
+                : { bg: '#0c1214', grid: 'rgba(255,255,255,0.04)', body: '#3b82f6', head: '#93c5fd',
+                    food: '#f87171', text: '#eaeaea', mask: 'rgba(10,18,20,0.72)' };
+            var size = SNAKE_GRID * SNAKE_CELL;
+            var i;
+
+            snakeCtx.fillStyle = c.bg;
+            snakeCtx.fillRect(0, 0, size, size);
+
+            snakeCtx.strokeStyle = c.grid;
+            snakeCtx.lineWidth = 1;
+            for (i = 1; i < SNAKE_GRID; i++) {
+                snakeCtx.beginPath();
+                snakeCtx.moveTo(i * SNAKE_CELL, 0);
+                snakeCtx.lineTo(i * SNAKE_CELL, size);
+                snakeCtx.moveTo(0, i * SNAKE_CELL);
+                snakeCtx.lineTo(size, i * SNAKE_CELL);
+                snakeCtx.stroke();
+            }
+
+            snakeCtx.fillStyle = c.food;
+            snakeCtx.beginPath();
+            snakeCtx.arc((snakeFood.x + 0.5) * SNAKE_CELL, (snakeFood.y + 0.5) * SNAKE_CELL,
+                         SNAKE_CELL * 0.34, 0, Math.PI * 2);
+            snakeCtx.fill();
+
+            for (i = snake.length - 1; i >= 0; i--) {
+                snakeCtx.fillStyle = i === 0 ? c.head : c.body;
+                snakeRoundRect(snake[i].x * SNAKE_CELL + 1, snake[i].y * SNAKE_CELL + 1,
+                               SNAKE_CELL - 2, SNAKE_CELL - 2, 5);
+            }
+
+            if (snakeState !== 'running') {
+                var text = snakeState === 'idle' ? '按方向键或点「开始」'
+                         : snakeState === 'paused' ? '已暂停'
+                         : snakeEndText + ' · 得分 ' + snakeScoreVal;
+                snakeCtx.fillStyle = c.mask;
+                snakeCtx.fillRect(0, 0, size, size);
+                snakeCtx.fillStyle = c.text;
+                snakeCtx.font = '600 16px system-ui, sans-serif';
+                snakeCtx.textAlign = 'center';
+                snakeCtx.textBaseline = 'middle';
+                snakeCtx.fillText(text, size / 2, size / 2);
+            }
+        }
+
+        function updateSnakeUI() {
+            snakeScoreEl.textContent = '得分 ' + snakeScoreVal;
+            snakeBestEl.textContent = '最高 ' + snakeBest;
+            snakeToggleBtn.textContent = snakeState === 'running' ? '暂停'
+                                       : snakeState === 'paused' ? '继续'
+                                       : snakeState === 'over' ? '重新开始'
+                                       : '开始';
+        }
+
+        function placeSnakeFood() {
+            var free = [];
+            var x, y, k, used;
+            for (y = 0; y < SNAKE_GRID; y++) {
+                for (x = 0; x < SNAKE_GRID; x++) {
+                    used = false;
+                    for (k = 0; k < snake.length; k++) {
+                        if (snake[k].x === x && snake[k].y === y) { used = true; break; }
+                    }
+                    if (!used) free.push({ x: x, y: y });
+                }
+            }
+            if (!free.length) return false;
+            snakeFood = free[Math.floor(Math.random() * free.length)];
+            return true;
+        }
+
+        function resetSnake() {
+            if (snakeTimer) { clearTimeout(snakeTimer); snakeTimer = null; }
+            snake = [{ x: 7, y: 7 }, { x: 6, y: 7 }, { x: 5, y: 7 }];
+            snakeDir = { x: 1, y: 0 };
+            snakeQueue = [];
+            snakeScoreVal = 0;
+            snakeEndText = '游戏结束';
+            snakeState = 'idle';
+            placeSnakeFood();
+            updateSnakeUI();
+            drawSnake();
+        }
+
+        function snakeSpeed() {
+            return Math.max(70, 150 - snakeScoreVal * 3);
+        }
+
+        function startSnake() {
+            snakeState = 'running';
+            updateSnakeUI();
+            drawSnake();
+            snakeTimer = setTimeout(snakeTick, snakeSpeed());
+        }
+
+        function pauseSnake() {
+            if (snakeState !== 'running') return;
+            if (snakeTimer) { clearTimeout(snakeTimer); snakeTimer = null; }
+            snakeState = 'paused';
+            updateSnakeUI();
+            drawSnake();
+        }
+
+        function endSnake(win) {
+            if (snakeTimer) { clearTimeout(snakeTimer); snakeTimer = null; }
+            snakeState = 'over';
+            snakeEndText = win ? '通关！' : '游戏结束';
+            updateSnakeUI();
+            drawSnake();
+        }
+
+        function snakeHits(head, eating) {
+            var n = eating ? snake.length : snake.length - 1;  /* 没吃到时尾巴会让出格子 */
+            for (var i = 0; i < n; i++) {
+                if (snake[i].x === head.x && snake[i].y === head.y) return true;
+            }
+            return false;
+        }
+
+        function snakeTick() {
+            snakeTimer = null;
+            if (snakeState !== 'running') return;
+            if (snakeQueue.length) snakeDir = snakeQueue.shift();
+
+            var head = { x: snake[0].x + snakeDir.x, y: snake[0].y + snakeDir.y };
+            var eating = head.x === snakeFood.x && head.y === snakeFood.y;
+
+            if (head.x < 0 || head.y < 0 || head.x >= SNAKE_GRID || head.y >= SNAKE_GRID ||
+                snakeHits(head, eating)) {
+                endSnake(false);
+                return;
+            }
+
+            snake.unshift(head);
+            if (eating) {
+                snakeScoreVal++;
+                if (snakeScoreVal > snakeBest) {
+                    snakeBest = snakeScoreVal;
+                    safeSet('snakeBest', String(snakeBest));
+                }
+                if (!placeSnakeFood()) {
+                    updateSnakeUI();
+                    endSnake(true);
+                    return;
+                }
+            } else {
+                snake.pop();
+            }
+            updateSnakeUI();
+            drawSnake();
+            snakeTimer = setTimeout(snakeTick, snakeSpeed());
+        }
+
+        function setSnakeDir(dx, dy) {
+            if (snakeState === 'over' || snakeState === 'paused') return;
+            if (snakeState === 'idle') {
+                if (dx === -snakeDir.x && dy === -snakeDir.y) return;  /* 开局不能立刻掉头 */
+                snakeDir = { x: dx, y: dy };
+                startSnake();
+                return;
+            }
+            var last = snakeQueue.length ? snakeQueue[snakeQueue.length - 1] : snakeDir;
+            if (dx === last.x && dy === last.y) return;
+            if (dx === -last.x && dy === -last.y) return;
+            if (snakeQueue.length < 2) snakeQueue.push({ x: dx, y: dy });
+        }
+
+        function toggleSnake() {
+            if (snakeState === 'running') {
+                pauseSnake();
+            } else if (snakeState === 'over') {
+                resetSnake();
+                startSnake();
+            } else {
+                startSnake();   /* idle 或 paused */
+            }
+        }
+
+        function openSnake() {
+            lastFocused = document.activeElement;
+            resetSnake();
+            snakeOverlay.classList.add('show');
+            snakeToggleBtn.focus();
+        }
+        function closeSnake() {
+            resetSnake();
+            snakeOverlay.classList.remove('show');
+            if (lastFocused && lastFocused.focus) lastFocused.focus();
+        }
+
+        var SNAKE_KEYS = {
+            ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0],
+            w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0],
+            W: [0, -1], S: [0, 1], A: [-1, 0], D: [1, 0]
+        };
+
+        document.addEventListener('keydown', function (e) {
+            if (!snakeOverlay.classList.contains('show')) return;
+            if (e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                if (!e.repeat) toggleSnake();
+                return;
+            }
+            var d = SNAKE_KEYS[e.key];
+            if (d) {
+                e.preventDefault();
+                setSnakeDir(d[0], d[1]);
+            }
+        });
+        document.addEventListener('keyup', function (e) {
+            /* 避免空格同时触发按钮的点击 */
+            if (snakeOverlay.classList.contains('show') && (e.key === ' ' || e.key === 'Spacebar')) {
+                e.preventDefault();
+            }
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && snakeOverlay.classList.contains('show')) closeSnake();
+        });
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) pauseSnake();
+        });
+
+        /* 触屏:方向键 + 画面上滑动 */
+        var SNAKE_PAD = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+        document.getElementById('snakePad').addEventListener('click', function (e) {
+            var btn = e.target.closest('button[data-d]');
+            if (!btn) return;
+            var d = SNAKE_PAD[btn.getAttribute('data-d')];
+            setSnakeDir(d[0], d[1]);
+        });
+
+        var swipeX = 0, swipeY = 0;
+        snakeCanvas.addEventListener('touchstart', function (e) {
+            var t = e.changedTouches[0];
+            swipeX = t.clientX;
+            swipeY = t.clientY;
+        }, { passive: true });
+        snakeCanvas.addEventListener('touchend', function (e) {
+            var t = e.changedTouches[0];
+            var dx = t.clientX - swipeX;
+            var dy = t.clientY - swipeY;
+            if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+            if (Math.abs(dx) > Math.abs(dy)) setSnakeDir(dx > 0 ? 1 : -1, 0);
+            else setSnakeDir(0, dy > 0 ? 1 : -1);
+        }, { passive: true });
+
+        snakeToggleBtn.addEventListener('click', toggleSnake);
+        document.getElementById('snakeClose').addEventListener('click', closeSnake);
+        document.getElementById('snakeBtn').addEventListener('click', openSnake);
+        resetSnake();
+
+        /* ================= 石头剪刀布 ================= */
+        var RPS = [
+            { e: '✊', n: '石头' },
+            { e: '✌️', n: '剪刀' },
+            { e: '✋', n: '布' }
+        ];
+        var rpsOverlay = document.getElementById('rpsOverlay');
+        var rpsTitle   = document.getElementById('rpsTitle');
+        var rpsStage   = document.getElementById('rpsStage');
+        var rpsHint    = document.getElementById('rpsHint');
+        var rpsScore   = document.getElementById('rpsScore');
+        var rpsChoices = document.getElementById('rpsChoices');
+        var rpsAgain   = document.getElementById('rpsAgain');
+        var rpsMode = 'bot';      /* 'bot' 对战机器人 | 'duo' 面对面 */
+        var rpsStep = 'p1';       /* 'p1' | 'p2' | 'result' */
+        var rpsP1 = null;
+        var rpsScores = {
+            bot: { a: 0, b: 0, d: 0 },
+            duo: { a: 0, b: 0, d: 0 }
+        };
+
+        /* 0 平局,1 前者赢,2 后者赢(0 石头 / 1 剪刀 / 2 布) */
+        function rpsWinner(a, b) {
+            if (a === b) return 0;
+            return ((a - b + 3) % 3 === 2) ? 1 : 2;
+        }
+
+        function rpsNames() {
+            return rpsMode === 'duo' ? ['玩家 1', '玩家 2'] : ['你', '机器人'];
+        }
+
+        function renderRpsScore() {
+            var sc = rpsScores[rpsMode];
+            var nm = rpsNames();
+            rpsScore.textContent = '比分  ' + nm[0] + ' ' + sc.a + ' : ' + sc.b + ' ' + nm[1] + '  ·  平局 ' + sc.d;
+        }
+
+        function setRpsStep(step) {
+            var duo = rpsMode === 'duo';
+            rpsStep = step;
+            rpsTitle.textContent = duo ? '猜拳 · 面对面' : '猜拳 · 对战机器人';
+            if (step === 'p1') {
+                rpsStage.textContent = '❔';
+                rpsHint.textContent = duo ? '玩家 1 请选择（选完把设备交给对方）' : '出招吧，选一个';
+            } else if (step === 'p2') {
+                rpsStage.textContent = '🙈';
+                rpsHint.textContent = '玩家 2 请选择（玩家 1 不要偷看哦）';
+            }
+            rpsChoices.hidden = false;
+            rpsAgain.hidden = true;
+            renderRpsScore();
+        }
+
+        function showRpsResult(a, b) {
+            var duo = rpsMode === 'duo';
+            var sc = rpsScores[rpsMode];
+            var nm = rpsNames();
+            var w = rpsWinner(a, b);
+            if (w === 1) sc.a++; else if (w === 2) sc.b++; else sc.d++;
+            rpsStep = 'result';
+            rpsStage.textContent = RPS[a].e + '  vs  ' + RPS[b].e;
+            rpsHint.textContent = RPS[a].n + ' 对 ' + RPS[b].n + '，' +
+                (w === 0 ? '平局！' : nm[w - 1] + '赢了！');
+            if (duo) {
+                rpsChoices.hidden = true;
+                rpsAgain.hidden = false;
+                rpsAgain.focus();
+            }
+            renderRpsScore();
+        }
+
+        function openRps(mode) {
+            rpsMode = mode;
+            rpsP1 = null;
+            setRpsStep('p1');
+            lastFocused = document.activeElement;
+            rpsOverlay.classList.add('show');
+            rpsChoices.querySelector('button').focus();
+        }
+        function closeRps() {
+            rpsOverlay.classList.remove('show');
+            rpsP1 = null;
+            if (lastFocused && lastFocused.focus) lastFocused.focus();
+        }
+
+        rpsChoices.addEventListener('click', function (e) {
+            var btn = e.target.closest('button[data-i]');
+            if (!btn) return;
+            var i = parseInt(btn.getAttribute('data-i'), 10);
+            if (rpsMode === 'bot') {
+                showRpsResult(i, randInt(0, 2));
+            } else if (rpsStep === 'p1') {
+                rpsP1 = i;
+                setRpsStep('p2');
+            } else if (rpsStep === 'p2') {
+                showRpsResult(rpsP1, i);
+                rpsP1 = null;
+            }
+        });
+
+        rpsAgain.addEventListener('click', function () {
+            rpsP1 = null;
+            setRpsStep('p1');
+            rpsChoices.querySelector('button').focus();
+        });
+        document.getElementById('rpsReset').addEventListener('click', function () {
+            rpsScores[rpsMode] = { a: 0, b: 0, d: 0 };
+            rpsP1 = null;
+            setRpsStep('p1');
+        });
+        document.getElementById('rpsClose').addEventListener('click', closeRps);
+        rpsOverlay.addEventListener('click', function (e) {
+            if (e.target === rpsOverlay) closeRps();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && rpsOverlay.classList.contains('show')) closeRps();
+        });
+        document.getElementById('rpsBotBtn').addEventListener('click', function () { openRps('bot'); });
+        document.getElementById('rpsDuoBtn').addEventListener('click', function () { openRps('duo'); });
 
         /* ================= 倒计时(用户自定义日期) ================= */
         var CD_KEY = 'countdown';
