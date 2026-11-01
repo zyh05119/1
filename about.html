@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>关于冷涩调</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: #0a0a0a;
@@ -21,11 +17,7 @@
             padding: 3rem 2rem;
         }
 
-        .about-wrap {
-            max-width: 680px;
-            width: 100%;
-            margin: 0 auto;
-        }
+        .about-wrap { max-width: 680px; width: 100%; margin: 0 auto; }
 
         .back {
             display: inline-block;
@@ -35,10 +27,7 @@
             margin-bottom: 2.5rem;
             transition: color 0.15s;
         }
-
-        .back:hover {
-            color: #60a5fa;
-        }
+        .back:hover { color: #60a5fa; }
 
         h1 {
             font-size: 2.2rem;
@@ -48,15 +37,9 @@
             margin-bottom: 0.4rem;
         }
 
-        .sub {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-bottom: 2.5rem;
-        }
+        .sub { font-size: 0.9rem; color: #6b7280; margin-bottom: 2.5rem; }
 
-        .section {
-            margin-bottom: 2rem;
-        }
+        .section { margin-bottom: 2rem; }
 
         .section h2 {
             font-size: 0.8rem;
@@ -65,6 +48,7 @@
             text-transform: uppercase;
             letter-spacing: 0.08em;
             margin-bottom: 0.8rem;
+            scroll-margin-top: 2rem;
         }
 
         .section p {
@@ -72,10 +56,13 @@
             line-height: 1.8;
             color: #b4b4bb;
         }
+        .section p + p { margin-top: 0.8rem; }
 
-        .section p + p {
-            margin-top: 0.8rem;
+        .section a {
+            color: #60a5fa;
+            text-decoration: none;
         }
+        .section a:hover { text-decoration: underline; }
 
         .contact-list {
             list-style: none;
@@ -93,10 +80,7 @@
             gap: 0.5rem;
             transition: color 0.15s;
         }
-
-        .contact-list a:hover {
-            color: #60a5fa;
-        }
+        .contact-list a:hover { color: #60a5fa; }
 
         .divider-line {
             width: 100%;
@@ -114,12 +98,8 @@
         }
 
         @media (max-width: 600px) {
-            body {
-                padding: 2rem 1.25rem;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
+            body { padding: 2rem 1.25rem; }
+            h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -130,26 +110,60 @@
         <h1>冷涩调</h1>
         <p class="sub">P5G的一个乐乐</p>
 
-        <div class="section">
+        <!-- ===== about me ===== -->
+        <div class="section" id="about">
             <h2>about me</h2>
             <p>
-                哈喽这里是冷涩调 一个喜欢二次元和音乐的妹子
-然后呢平时最大的爱好就是追番 特别宅呀
+                哈喽这里是冷涩调，一个喜欢二次元和音乐的妹子。
+                平时最大的爱好就是追番，特别宅呀。
             </p>
             <p>
-                音乐方面 我特别喜欢Ariana 杨丞琳 种类的话呢我什么都会听一点 r&b britpop什么的最好了
-还有就是游戏 第五人格 王者荣耀 和平精英 无畏契约 金铲铲 原神 1999 崩铁 鸣潮什么的我都玩过。
+                音乐方面，我特别喜欢 Ariana、杨丞琳，种类的话呢我什么都会听一点，
+                R&amp;B、Britpop 什么的最好了。还有就是游戏，第五人格、王者荣耀、和平精英、
+                无畏契约、金铲铲、原神、1999、崩铁、鸣潮什么的我都玩过。
+            </p>
+        </div>
+
+        <!-- ===== 报告问题（首页 #bug 直达） ===== -->
+        <div class="section" id="bug">
+            <h2>报告问题</h2>
+            <p>
+                工具链接打不开，功能异常，页面显示错乱？<br>
+                email <a href="mailto:zyh0197@gmail.com">zyh0197@gmail.com</a> 吧！
+            </p>
+        </div>
+
+        <!-- ===== 工具建议（首页 #suggest 直达） ===== -->
+        <div class="section" id="suggest">
+            <h2>工具建议</h2>
+            <p>
+                想要什么新东西？觉得可以做得更好？
+                 <a href="mailto:zyh0197@gmail.com">zyh0197@gmail.com</a>，
+                或者加whatsapp <strong>81790196</strong>，我会认真看。
             </p>
         </div>
 
         <div class="divider-line"></div>
 
-        <div class="section">
+        <!-- ===== 联系方式（首页 #feedback 直达） ===== -->
+        <div class="section" id="feedback">
             <h2>contact</h2>
             <ul class="contact-list">
-                <li><a href="mailto:你的邮箱@example.com">📧 zyh0197@gmail.com</a></li>
-                <li><a href="https://github.com/你的用户名" target="_blank" rel="noopener noreferrer">Zain-1919</a></li>
-                <li><a href="javascript:void(0)">💬 81790196</a></li>
+                <li>
+                    <a href="mailto:zyh0197@gmail.com">
+                        <span aria-hidden="true">📧</span> zyh0197@gmail.com
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/Zain-1919" target="_blank" rel="noopener noreferrer">
+                        <span aria-hidden="true">wechat</span> Zain-1919
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="qq-copy" title="点击复制 QQ 号">
+                        <span aria-hidden="true">💬</span> 81790196
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -157,5 +171,28 @@
             天天开心 大家
         </div>
     </div>
+
+    <script>
+    (function () {
+        // 点击 QQ 号复制到剪贴板
+        var qq = document.getElementById('qq-copy');
+        if (!qq) return;
+        qq.addEventListener('click', function (e) {
+            e.preventDefault();
+            var num = '81790196';
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(num).then(function () {
+                    var old = qq.textContent;
+                    qq.textContent = '💬 已复制！';
+                    setTimeout(function () { qq.textContent = old; }, 1200);
+                }).catch(function () {
+                    alert('QQ：' + num);
+                });
+            } else {
+                alert('QQ：' + num);
+            }
+        });
+    })();
+    </script>
 </body>
 </html>
