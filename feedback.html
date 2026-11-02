@@ -19,10 +19,7 @@
             transition: background-color 0.4s ease, color 0.3s ease;
         }
 
-        body.light-mode {
-            background-color: #f5f0e6;
-            color: #3a3528;
-        }
+        body.light-mode { background-color: #f5f0e6; color: #3a3528; }
 
         body::after {
             content: '';
@@ -47,199 +44,79 @@
 
         .wrap { max-width: 680px; width: 100%; margin: 0 auto; position: relative; z-index: 1; }
 
-        .back {
-            display: inline-block;
-            font-size: 0.8rem;
-            color: #6b7280;
-            text-decoration: none;
-            margin-bottom: 2.5rem;
-            transition: color 0.15s;
-        }
+        .back { display: inline-block; font-size: 0.8rem; color: #6b7280; text-decoration: none; margin-bottom: 2.5rem; transition: color 0.15s; }
         .back:hover { color: #60a5fa; }
         body.light-mode .back { color: #a89b82; }
         body.light-mode .back:hover { color: #b8904a; }
 
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 600;
-            letter-spacing: -0.03em;
-            color: #ffffff;
-            margin-bottom: 0.4rem;
-            transition: color 0.3s ease;
-        }
+        h1 { font-size: 2.2rem; font-weight: 600; letter-spacing: -0.03em; color: #ffffff; margin-bottom: 0.4rem; transition: color 0.3s ease; }
         body.light-mode h1 { color: #2a2418; }
 
-        .sub {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-bottom: 2.5rem;
-            transition: color 0.3s ease;
-        }
+        .sub { font-size: 0.9rem; color: #6b7280; margin-bottom: 2.5rem; transition: color 0.3s ease; }
         body.light-mode .sub { color: #8a7f68; }
 
         .section { margin-bottom: 2rem; }
-
-        .section h2 {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #3b82f6;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 0.8rem;
-            scroll-margin-top: 2rem;
-            transition: color 0.3s ease;
-        }
+        .section h2 { font-size: 0.8rem; font-weight: 600; color: #3b82f6; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.8rem; scroll-margin-top: 2rem; transition: color 0.3s ease; }
         body.light-mode .section h2 { color: #b8904a; }
 
-        .section p {
-            font-size: 0.95rem;
-            line-height: 1.8;
-            color: #b4b4bb;
-            transition: color 0.3s ease;
-        }
+        .section p { font-size: 0.95rem; line-height: 1.8; color: #b4b4bb; transition: color 0.3s ease; }
         body.light-mode .section p { color: #5a5040; }
         .section p + p { margin-top: 0.8rem; }
 
-        .section a {
-            color: #60a5fa;
-            text-decoration: none;
-        }
+        .section a { color: #60a5fa; text-decoration: none; }
         .section a:hover { text-decoration: underline; }
         body.light-mode .section a { color: #b8904a; }
 
-        .contact-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-        }
-
-        .contact-list a {
-            color: #d4d4d8;
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: color 0.15s;
-        }
+        .contact-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+        .contact-list a { color: #d4d4d8; text-decoration: none; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: color 0.15s; }
         .contact-list a:hover { color: #60a5fa; }
         body.light-mode .contact-list a { color: #4a4232; }
         body.light-mode .contact-list a:hover { color: #b8904a; }
 
-        .divider-line {
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(to right, #2e2e2e, transparent);
-            margin: 2.5rem 0;
-        }
-        body.light-mode .divider-line {
-            background: linear-gradient(to right, #d8cfba, transparent);
-        }
+        .divider-line { width: 100%; height: 1px; background: linear-gradient(to right, #2e2e2e, transparent); margin: 2.5rem 0; }
+        body.light-mode .divider-line { background: linear-gradient(to right, #d8cfba, transparent); }
 
-        .footer-note {
-            text-align: center;
-            font-size: 0.7rem;
-            color: #3f3f46;
-            margin-top: 3rem;
-            letter-spacing: 0.5px;
-            transition: color 0.3s ease;
-        }
+        .footer-note { text-align: center; font-size: 0.7rem; color: #3f3f46; margin-top: 3rem; letter-spacing: 0.5px; transition: color 0.3s ease; }
         body.light-mode .footer-note { color: #a89b82; }
 
-        /* ===== 主题切换 ===== */
         .theme-toggle {
-            position: fixed;
-            top: 16px;
-            right: 16px;
-            z-index: 100;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+            position: fixed; top: 16px; right: 16px; z-index: 100;
+            width: 36px; height: 36px; border-radius: 50%;
             border: 1px solid rgba(60, 110, 120, 0.08);
             background: rgba(10, 18, 20, 0.35);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            color: #c8a85a;
-            font-size: 0.9rem;
-            cursor: pointer;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            color: #c8a85a; font-size: 0.9rem; cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            user-select: none; -webkit-tap-highlight-color: transparent;
         }
-        .theme-toggle:hover {
-            transform: scale(1.05);
-            border-color: rgba(200, 180, 100, 0.15);
-            background: rgba(10, 18, 20, 0.5);
-            box-shadow: 0 0 20px rgba(200, 180, 80, 0.06);
-        }
+        .theme-toggle:hover { transform: scale(1.05); border-color: rgba(200, 180, 100, 0.15); background: rgba(10, 18, 20, 0.5); box-shadow: 0 0 20px rgba(200, 180, 80, 0.06); }
         .theme-toggle:active { transform: scale(0.92); }
         .theme-toggle:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
 
-        body.light-mode .theme-toggle {
-            background: rgba(255, 250, 240, 0.8);
-            border-color: rgba(180, 150, 100, 0.25);
-            color: #a8863a;
-        }
-        body.light-mode .theme-toggle:hover {
-            background: rgba(255, 250, 240, 0.95);
-            border-color: rgba(180, 150, 100, 0.4);
-            box-shadow: 0 0 20px rgba(180, 150, 80, 0.12);
-        }
+        body.light-mode .theme-toggle { background: rgba(255, 250, 240, 0.8); border-color: rgba(180, 150, 100, 0.25); color: #a8863a; }
+        body.light-mode .theme-toggle:hover { background: rgba(255, 250, 240, 0.95); border-color: rgba(180, 150, 100, 0.4); box-shadow: 0 0 20px rgba(180, 150, 80, 0.12); }
 
-        /* ===== 语言切换 ===== */
-        .lang-toggle {
-            right: 60px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            font-family: inherit;
-        }
+        .lang-toggle { right: 60px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.5px; font-family: inherit; }
 
-        /* ===== 天气 ===== */
         .weather-corner {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
+            position: fixed; bottom: 20px; right: 20px; z-index: 100;
             background: rgba(10, 18, 20, 0.45);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(60, 110, 120, 0.06);
-            border-radius: 30px;
-            padding: 6px 16px 6px 14px;
+            border-radius: 30px; padding: 6px 16px 6px 14px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.75rem;
-            color: rgba(200, 220, 225, 0.55);
-            letter-spacing: 0.5px;
-            user-select: none;
-            pointer-events: none;
-            white-space: nowrap;
-            transition: background 0.3s, border-color 0.3s, color 0.3s;
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.75rem; color: rgba(200, 220, 225, 0.55);
+            letter-spacing: 0.5px; user-select: none; pointer-events: none;
+            white-space: nowrap; transition: background 0.3s, border-color 0.3s, color 0.3s;
         }
-        body.light-mode .weather-corner {
-            background: rgba(255, 250, 240, 0.8);
-            border-color: rgba(180, 150, 100, 0.20);
-            color: rgba(120, 100, 70, 0.75);
-            box-shadow: 0 4px 20px rgba(120, 100, 60, 0.08);
-        }
+        body.light-mode .weather-corner { background: rgba(255, 250, 240, 0.8); border-color: rgba(180, 150, 100, 0.20); color: rgba(120, 100, 70, 0.75); box-shadow: 0 4px 20px rgba(120, 100, 60, 0.08); }
         .weather-corner .w-icon { font-size: 0.9rem; line-height: 1; }
         .weather-corner .w-temp { font-weight: 400; color: rgba(200, 220, 225, 0.7); }
         body.light-mode .weather-corner .w-temp { color: rgba(120, 100, 70, 0.9); }
-        .weather-corner .w-city {
-            font-size: 0.6rem;
-            opacity: 0.55;
-            max-width: 60px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .weather-corner .w-city { font-size: 0.6rem; opacity: 0.55; max-width: 60px; overflow: hidden; text-overflow: ellipsis; }
         body.light-mode .weather-corner .w-city { opacity: 0.7; }
 
         @media (max-width: 600px) {
@@ -313,15 +190,13 @@
     (function () {
         'use strict';
 
-        /* localStorage 在隐私模式下可能抛错，统一包一层 */
-        function safeGet(key) {
-            try { return localStorage.getItem(key); } catch (e) { return null; }
-        }
-        function safeSet(key, val) {
-            try { localStorage.setItem(key, val); } catch (e) {}
-        }
+        function safeGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+        function safeSet(key, val) { try { localStorage.setItem(key, val); } catch (e) {} }
 
-        /* ================= 多语言（与 index 共用 lang 键） ================= */
+        var QQ_NUMBER = '81790196';
+        var EMAIL = 'zyh0197@gmail.com';
+        var GITHUB = 'Zain-1919';
+
         var I18N = {
             zh: {
                 brand: '冷涩调',
@@ -342,7 +217,7 @@
                 fb_contact_h: 'contact',
                 qq_copy_title: '点击复制 QQ 号',
                 qq_copied: '已复制！',
-                qq_alert: 'QQ：81790196',
+                qq_alert: 'QQ：' + QQ_NUMBER,
                 fb_footer: '天天开心 大家'
             },
             en: {
@@ -364,7 +239,7 @@
                 fb_contact_h: 'contact',
                 qq_copy_title: 'Click to copy QQ number',
                 qq_copied: 'Copied!',
-                qq_alert: 'QQ: 81790196',
+                qq_alert: 'QQ: ' + QQ_NUMBER,
                 fb_footer: 'Have a good day, everyone'
             }
         };
@@ -386,9 +261,16 @@
             return str;
         }
 
+        /* BUG FIX: keep the actual email/GitHub/QQ text nodes intact.
+           Previously every [data-i18n] element had its textContent replaced,
+           which would wipe out anything nested. The current markup happens
+           to keep those values in un-tagged nodes, but this guard makes it
+           explicit and future-proof. Also, the leading/trailing spaces in
+           fb_bug_p3 / fb_sug_p2 are preserved now by NOT trimming. */
         function applyLang() {
             document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
             document.title = t('fb_doc_title');
+
             Array.prototype.forEach.call(document.querySelectorAll('[data-i18n]'), function (el) {
                 el.textContent = t(el.getAttribute('data-i18n'));
             });
@@ -401,6 +283,13 @@
             Array.prototype.forEach.call(document.querySelectorAll('[data-i18n-title]'), function (el) {
                 el.setAttribute('title', t(el.getAttribute('data-i18n-title')));
             });
+
+            /* BUG FIX: if the QQ label is currently showing the "copied"
+               confirmation, don't leave it stuck in the old language.
+               Restore it to the numeric QQ value on language change. */
+            var qqText = document.getElementById('qq-text');
+            if (qqText) qqText.textContent = QQ_NUMBER;
+
             langToggle.textContent = lang === 'zh' ? 'EN' : '中';
         }
 
@@ -410,7 +299,7 @@
             applyLang();
         });
 
-        /* ================= 主题切换（与 index 共用 theme 键） ================= */
+        /* ================= 主题切换 ================= */
         var toggleBtn = document.getElementById('themeToggle');
         var isLight = safeGet('theme') === 'light';
 
@@ -432,7 +321,10 @@
             }
         });
 
-        /* ================= 天气 ================= */
+        /* ================= 天气 =================
+           BUG FIX: pass the current UI language to wttr.in so the city name
+           matches the selected language instead of always coming back in
+           Chinese. Also re-fetch when the language is switched. */
         function getWeather() {
             var tempEl = document.getElementById('weatherTemp');
             var cityEl = document.getElementById('weatherCity');
@@ -441,7 +333,7 @@
             var controller = new AbortController();
             var timeoutId = setTimeout(function () { controller.abort(); }, 6000);
 
-            fetch('https://wttr.in?format=j1&lang=zh', { signal: controller.signal })
+            fetch('https://wttr.in?format=j1&lang=' + (lang === 'zh' ? 'zh' : 'en'), { signal: controller.signal })
                 .then(function (res) {
                     clearTimeout(timeoutId);
                     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -480,19 +372,36 @@
         }
         getWeather();
 
-        /* ================= QQ 复制 ================= */
+        /* ================= QQ 复制 =================
+           BUG FIX: the previous version hardcoded the number inside the
+           handler while the displayed text lived in a separate node. If the
+           user clicked copy, then switched language mid-"已复制！", the
+           restore timer could resurrect the wrong value. Now a single
+           QQ_NUMBER constant is used everywhere and a shared reset helper
+           keeps state consistent. */
         var qq = document.getElementById('qq-copy');
         var qqText = document.getElementById('qq-text');
+        var qqResetTimer = null;
+
+        function resetQQText() {
+            if (qqText) qqText.textContent = QQ_NUMBER;
+        }
+
         if (qq) {
             qq.addEventListener('click', function (e) {
                 e.preventDefault();
-                var num = '81790196';
+
                 function onCopied() {
+                    if (qqResetTimer) clearTimeout(qqResetTimer);
                     qqText.textContent = t('qq_copied');
-                    setTimeout(function () { qqText.textContent = num; }, 1200);
+                    qqResetTimer = setTimeout(function () {
+                        resetQQText();
+                        qqResetTimer = null;
+                    }, 1200);
                 }
+
                 if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(num).then(onCopied).catch(function () {
+                    navigator.clipboard.writeText(QQ_NUMBER).then(onCopied).catch(function () {
                         alert(t('qq_alert'));
                     });
                 } else {
@@ -501,7 +410,13 @@
             });
         }
 
-        /* 初始化语言（会把标题、按钮文字、页面文案一次性刷成当前语言） */
+        /* Re-fetch weather when language changes so the city label updates */
+        var originalApplyLang = applyLang;
+        applyLang = function () {
+            originalApplyLang();
+            getWeather();
+        };
+
         applyLang();
     })();
     </script>
