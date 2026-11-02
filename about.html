@@ -140,6 +140,7 @@
             box-shadow: 0 0 20px rgba(200, 180, 80, 0.06);
         }
         .theme-toggle:active { transform: scale(0.92); }
+        .theme-toggle:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
 
         body.light-mode .theme-toggle {
             background: rgba(255, 250, 240, 0.8);
@@ -150,6 +151,15 @@
             background: rgba(255, 250, 240, 0.95);
             border-color: rgba(180, 150, 100, 0.4);
             box-shadow: 0 0 20px rgba(180, 150, 80, 0.12);
+        }
+
+        /* ===== 语言切换 ===== */
+        .lang-toggle {
+            right: 60px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            font-family: inherit;
         }
 
         /* ===== 天气 ===== */
@@ -198,13 +208,15 @@
             body { padding: 2rem 1.25rem; }
             h1 { font-size: 1.8rem; }
             .theme-toggle { top: 12px; right: 12px; width: 32px; height: 32px; font-size: 0.8rem; }
+            .lang-toggle { right: 52px; font-size: 0.65rem; }
             .weather-corner { bottom: 14px; right: 14px; padding: 5px 12px 5px 10px; font-size: 0.68rem; }
         }
     </style>
 </head>
 <body>
 
-    <button class="theme-toggle" id="themeToggle" aria-label="切换黑白模式">✦</button>
+    <button class="theme-toggle" id="themeToggle" type="button" data-i18n-aria="aria_theme" aria-label="切换黑白模式">✦</button>
+    <button class="theme-toggle lang-toggle" id="langToggle" type="button" data-i18n-aria="aria_lang" aria-label="切换语言">EN</button>
 
     <div class="weather-corner" id="weatherCorner">
         <span class="w-icon" id="weatherIcon">🌤</span>
@@ -213,33 +225,106 @@
     </div>
 
     <div class="about-wrap">
-        <a href="index.html" class="back">← 返回工具集</a>
+        <a href="index.html" class="back" data-i18n="ab_back">← 返回工具集</a>
 
-        <h1>冷涩调</h1>
-        <p class="sub">P5G的一个乐乐</p>
+        <h1 data-i18n="brand">冷涩调</h1>
+        <p class="sub" data-i18n="ab_sub">P5G的一个乐乐</p>
 
         <div class="section">
             <h2>about me</h2>
-            <p>
+            <p data-i18n="ab_p1">
                 哈喽这里是冷涩调，一个喜欢二次元和音乐的妹子。
                 平时最大的爱好就是追番，特别宅呀。
             </p>
-            <p>
+            <p data-i18n="ab_p2">
                 音乐方面，我特别喜欢 Ariana、杨丞琳，种类的话呢我什么都会听一点，
                 R&amp;B、Britpop 什么的最好了。还有就是游戏，第五人格、王者荣耀、和平精英、
                 无畏契约、金铲铲、原神、1999、崩铁、鸣潮什么的我都玩过。
             </p>
         </div>
 
-        <div class="footer-note">天天开心 大家</div>
+        <div class="footer-note" data-i18n="ab_footer">天天开心 大家</div>
     </div>
 
     <script>
     (function () {
         'use strict';
 
+        /* localStorage 在隐私模式下可能抛错，统一包一层 */
+        function safeGet(key) {
+            try { return localStorage.getItem(key); } catch (e) { return null; }
+        }
+        function safeSet(key, val) {
+            try { localStorage.setItem(key, val); } catch (e) {}
+        }
+
+        /* ================= 多语言（与 index / feedback 共用 lang 键） ================= */
+        var I18N = {
+            zh: {
+                brand: '冷涩调',
+                aria_theme: '切换黑白模式',
+                aria_lang: '切换语言',
+                ab_doc_title: '关于冷涩调',
+                ab_back: '← 返回工具集',
+                ab_sub: 'P5G的一个乐乐',
+                ab_p1: '哈喽这里是冷涩调，一个喜欢二次元和音乐的妹子。平时最大的爱好就是追番，特别宅呀。',
+                ab_p2: '音乐方面，我特别喜欢 Ariana、杨丞琳，种类的话呢我什么都会听一点，R&B、Britpop 什么的最好了。还有就是游戏，第五人格、王者荣耀、和平精英、无畏契约、金铲铲、原神、1999、崩铁、鸣潮什么的我都玩过。',
+                ab_footer: '天天开心 大家'
+            },
+            en: {
+                brand: 'idk how to translate this',
+                aria_theme: 'Toggle light/dark theme',
+                aria_lang: 'Switch language',
+                ab_doc_title: 'About',
+                ab_back: '← Back to tools',
+                ab_sub: 'a happy soul from P5G',
+                ab_p1: 'Hi, this is 冷涩调 (Lěngsè Diào) — a girl who loves anime and music. My biggest hobby is binge-watching anime. Total homebody.',
+                ab_p2: 'Musically I am a big fan of Ariana and Rainie Yang, and I listen to a bit of everything — R&B and Britpop especially. As for games, I have played Identity V, Honor of Kings, PUBG Mobile, VALORANT, Teamfight Tactics, Genshin Impact, Reverse: 1999, Honkai: Star Rail, Wuthering Waves, and more.',
+                ab_footer: 'Have a good day, everyone'
+            }
+        };
+
+        var lang = safeGet('lang') === 'en' ? 'en' : 'zh';
+        var langToggle = document.getElementById('langToggle');
+
+        function t(key, vars) {
+            var d = I18N[lang];
+            var str = (d && d[key] !== undefined) ? d[key]
+                    : (I18N.zh[key] !== undefined ? I18N.zh[key] : key);
+            if (vars) {
+                for (var k in vars) {
+                    if (Object.prototype.hasOwnProperty.call(vars, k)) {
+                        str = str.split('{' + k + '}').join(vars[k]);
+                    }
+                }
+            }
+            return str;
+        }
+
+        function applyLang() {
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+            document.title = t('ab_doc_title');
+            Array.prototype.forEach.call(document.querySelectorAll('[data-i18n]'), function (el) {
+                el.textContent = t(el.getAttribute('data-i18n'));
+            });
+            Array.prototype.forEach.call(document.querySelectorAll('[data-i18n-ph]'), function (el) {
+                el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph')));
+            });
+            Array.prototype.forEach.call(document.querySelectorAll('[data-i18n-aria]'), function (el) {
+                el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
+            });
+            langToggle.textContent = lang === 'zh' ? 'EN' : '中';
+        }
+
+        langToggle.addEventListener('click', function () {
+            lang = lang === 'zh' ? 'en' : 'zh';
+            safeSet('lang', lang);
+            applyLang();
+        });
+
+        /* ================= 主题切换（与 index / feedback 共用 theme 键） ================= */
         var toggleBtn = document.getElementById('themeToggle');
-        var isLight = localStorage.getItem('theme') === 'light';
+        var isLight = safeGet('theme') === 'light';
 
         if (isLight) {
             document.body.classList.add('light-mode');
@@ -251,14 +336,15 @@
             if (isLight) {
                 document.body.classList.add('light-mode');
                 toggleBtn.textContent = '☀';
-                localStorage.setItem('theme', 'light');
+                safeSet('theme', 'light');
             } else {
                 document.body.classList.remove('light-mode');
                 toggleBtn.textContent = '✦';
-                localStorage.setItem('theme', 'dark');
+                safeSet('theme', 'dark');
             }
         });
 
+        /* ================= 天气 ================= */
         function getWeather() {
             var tempEl = document.getElementById('weatherTemp');
             var cityEl = document.getElementById('weatherCity');
@@ -305,6 +391,9 @@
                 .catch(function () { clearTimeout(timeoutId); });
         }
         getWeather();
+
+        /* 初始化语言 */
+        applyLang();
     })();
     </script>
 </body>
