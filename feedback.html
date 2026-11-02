@@ -178,6 +178,7 @@
             box-shadow: 0 0 20px rgba(200, 180, 80, 0.06);
         }
         .theme-toggle:active { transform: scale(0.92); }
+        .theme-toggle:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
 
         body.light-mode .theme-toggle {
             background: rgba(255, 250, 240, 0.8);
@@ -188,6 +189,15 @@
             background: rgba(255, 250, 240, 0.95);
             border-color: rgba(180, 150, 100, 0.4);
             box-shadow: 0 0 20px rgba(180, 150, 80, 0.12);
+        }
+
+        /* ===== 语言切换 ===== */
+        .lang-toggle {
+            right: 60px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            font-family: inherit;
         }
 
         /* ===== 天气 ===== */
@@ -236,13 +246,15 @@
             body { padding: 2rem 1.25rem; }
             h1 { font-size: 1.8rem; }
             .theme-toggle { top: 12px; right: 12px; width: 32px; height: 32px; font-size: 0.8rem; }
+            .lang-toggle { right: 52px; font-size: 0.65rem; }
             .weather-corner { bottom: 14px; right: 14px; padding: 5px 12px 5px 10px; font-size: 0.68rem; }
         }
     </style>
 </head>
 <body>
 
-    <button class="theme-toggle" id="themeToggle" aria-label="切换黑白模式">✦</button>
+    <button class="theme-toggle" id="themeToggle" type="button" data-i18n-aria="aria_theme" aria-label="切换黑白模式">✦</button>
+    <button class="theme-toggle lang-toggle" id="langToggle" type="button" data-i18n-aria="aria_lang" aria-label="切换语言">EN</button>
 
     <div class="weather-corner" id="weatherCorner">
         <span class="w-icon" id="weatherIcon">🌤</span>
@@ -251,32 +263,30 @@
     </div>
 
     <div class="wrap">
-        <a href="index.html" class="back">← 返回工具集</a>
+        <a href="index.html" class="back" data-i18n="fb_back">← 返回工具集</a>
 
-        <h1>反馈与联系</h1>
-        <p class="sub">问题？建议？聊天？都可以</p>
+        <h1 data-i18n="fb_title">反馈与联系</h1>
+        <p class="sub" data-i18n="fb_sub">问题？建议？聊天？都可以</p>
 
         <div class="section" id="bug">
-            <h2>报告问题</h2>
+            <h2 data-i18n="fb_bug_h">报告问题</h2>
             <p>
-                链接打不开、功能异常、页面显示错乱？<br>
-                email <a href="mailto:zyh0197@gmail.com">zyh0197@gmail.com</a> 即可。
+                <span data-i18n="fb_bug_p1">链接打不开、功能异常、页面显示错乱？</span><br>
+                <span data-i18n="fb_bug_p2">email </span><a href="mailto:zyh0197@gmail.com">zyh0197@gmail.com</a><span data-i18n="fb_bug_p3"> 即可。</span>
             </p>
         </div>
 
         <div class="section" id="suggest">
-            <h2>工具建议</h2>
+            <h2 data-i18n="fb_sug_h">工具建议</h2>
             <p>
-                想要什么新东西？觉得可以做得更好？
-                email <a href="mailto:zyh0197@gmail.com">zyh0197@gmail.com</a>，
-                或者加 whatsapp <strong>81790196</strong>，我会认真看。
+                <span data-i18n="fb_sug_p1">想要什么新东西？觉得可以做得更好？ email </span><a href="mailto:zyh0197@gmail.com">zyh0197@gmail.com</a><span data-i18n="fb_sug_p2">，或者加 whatsapp </span><strong>81790196</strong><span data-i18n="fb_sug_p3">，我会认真看。</span>
             </p>
         </div>
 
         <div class="divider-line"></div>
 
         <div class="section" id="feedback">
-            <h2>contact</h2>
+            <h2 data-i18n="fb_contact_h">contact</h2>
             <ul class="contact-list">
                 <li>
                     <a href="mailto:zyh0197@gmail.com">
@@ -289,23 +299,120 @@
                     </a>
                 </li>
                 <li>
-                    <a href="javascript:void(0)" id="qq-copy" title="点击复制 QQ 号">
-                        <span aria-hidden="true">💬</span> 81790196
+                    <a href="javascript:void(0)" id="qq-copy" data-i18n-title="qq_copy_title" title="点击复制 QQ 号">
+                        <span aria-hidden="true">💬</span> <span id="qq-text">81790196</span>
                     </a>
                 </li>
             </ul>
         </div>
 
-        <div class="footer-note">天天开心 大家</div>
+        <div class="footer-note" data-i18n="fb_footer">天天开心 大家</div>
     </div>
 
     <script>
     (function () {
         'use strict';
 
-        /* ===== 主题切换 ===== */
+        /* localStorage 在隐私模式下可能抛错，统一包一层 */
+        function safeGet(key) {
+            try { return localStorage.getItem(key); } catch (e) { return null; }
+        }
+        function safeSet(key, val) {
+            try { localStorage.setItem(key, val); } catch (e) {}
+        }
+
+        /* ================= 多语言（与 index 共用 lang 键） ================= */
+        var I18N = {
+            zh: {
+                brand: '冷涩调',
+                aria_theme: '切换黑白模式',
+                aria_lang: '切换语言',
+                fb_doc_title: '反馈区',
+                fb_back: '← 返回工具集',
+                fb_title: '反馈与联系',
+                fb_sub: '问题？建议？聊天？都可以',
+                fb_bug_h: '报告问题',
+                fb_bug_p1: '链接打不开、功能异常、页面显示错乱？',
+                fb_bug_p2: 'email ',
+                fb_bug_p3: ' 即可。',
+                fb_sug_h: '工具建议',
+                fb_sug_p1: '想要什么新东西？觉得可以做得更好？ email ',
+                fb_sug_p2: '，或者加 whatsapp ',
+                fb_sug_p3: '，我会认真看。',
+                fb_contact_h: 'contact',
+                qq_copy_title: '点击复制 QQ 号',
+                qq_copied: '已复制！',
+                qq_alert: 'QQ：81790196',
+                fb_footer: '天天开心 大家'
+            },
+            en: {
+                brand: 'idk how to translate this',
+                aria_theme: 'Toggle light/dark theme',
+                aria_lang: 'Switch language',
+                fb_doc_title: 'Feedback',
+                fb_back: '← Back to tools',
+                fb_title: 'Feedback & Contact',
+                fb_sub: 'Questions? Suggestions? Just want to chat? All fine.',
+                fb_bug_h: 'Report a problem',
+                fb_bug_p1: 'Broken link, weird behaviour, layout glitches?',
+                fb_bug_p2: 'Just email ',
+                fb_bug_p3: '.',
+                fb_sug_h: 'Suggestions',
+                fb_sug_p1: 'Want something new? Think it could be better? Email ',
+                fb_sug_p2: ', or message me on WhatsApp at ',
+                fb_sug_p3: '. I read everything.',
+                fb_contact_h: 'contact',
+                qq_copy_title: 'Click to copy QQ number',
+                qq_copied: 'Copied!',
+                qq_alert: 'QQ: 81790196',
+                fb_footer: 'Have a good day, everyone'
+            }
+        };
+
+        var lang = safeGet('lang') === 'en' ? 'en' : 'zh';
+        var langToggle = document.getElementById('langToggle');
+
+        function t(key, vars) {
+            var d = I18N[lang];
+            var str = (d && d[key] !== undefined) ? d[key]
+                    : (I18N.zh[key] !== undefined ? I18N.zh[key] : key);
+            if (vars) {
+                for (var k in vars) {
+                    if (Object.prototype.hasOwnProperty.call(vars, k)) {
+                        str = str.split('{' + k + '}').join(vars[k]);
+                    }
+                }
+            }
+            return str;
+        }
+
+        function applyLang() {
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+            document.title = t('fb_doc_title');
+            Array.prototype.forEach.call(document.querySelectorAll('[data-i18n]'), function (el) {
+                el.textContent = t(el.getAttribute('data-i18n'));
+            });
+            Array.prototype.forEach.call(document.querySelectorAll('[data-i18n-ph]'), function (el) {
+                el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph')));
+            });
+            Array.prototype.forEach.call(document.querySelectorAll('[data-i18n-aria]'), function (el) {
+                el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
+            });
+            Array.prototype.forEach.call(document.querySelectorAll('[data-i18n-title]'), function (el) {
+                el.setAttribute('title', t(el.getAttribute('data-i18n-title')));
+            });
+            langToggle.textContent = lang === 'zh' ? 'EN' : '中';
+        }
+
+        langToggle.addEventListener('click', function () {
+            lang = lang === 'zh' ? 'en' : 'zh';
+            safeSet('lang', lang);
+            applyLang();
+        });
+
+        /* ================= 主题切换（与 index 共用 theme 键） ================= */
         var toggleBtn = document.getElementById('themeToggle');
-        var isLight = localStorage.getItem('theme') === 'light';
+        var isLight = safeGet('theme') === 'light';
 
         if (isLight) {
             document.body.classList.add('light-mode');
@@ -317,15 +424,15 @@
             if (isLight) {
                 document.body.classList.add('light-mode');
                 toggleBtn.textContent = '☀';
-                localStorage.setItem('theme', 'light');
+                safeSet('theme', 'light');
             } else {
                 document.body.classList.remove('light-mode');
                 toggleBtn.textContent = '✦';
-                localStorage.setItem('theme', 'dark');
+                safeSet('theme', 'dark');
             }
         });
 
-        /* ===== 天气 ===== */
+        /* ================= 天气 ================= */
         function getWeather() {
             var tempEl = document.getElementById('weatherTemp');
             var cityEl = document.getElementById('weatherCity');
@@ -373,25 +480,29 @@
         }
         getWeather();
 
-        /* ===== QQ 复制 ===== */
+        /* ================= QQ 复制 ================= */
         var qq = document.getElementById('qq-copy');
+        var qqText = document.getElementById('qq-text');
         if (qq) {
             qq.addEventListener('click', function (e) {
                 e.preventDefault();
                 var num = '81790196';
+                function onCopied() {
+                    qqText.textContent = t('qq_copied');
+                    setTimeout(function () { qqText.textContent = num; }, 1200);
+                }
                 if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(num).then(function () {
-                        var old = qq.textContent;
-                        qq.textContent = '💬 已复制！';
-                        setTimeout(function () { qq.textContent = old; }, 1200);
-                    }).catch(function () {
-                        alert('QQ：' + num);
+                    navigator.clipboard.writeText(num).then(onCopied).catch(function () {
+                        alert(t('qq_alert'));
                     });
                 } else {
-                    alert('QQ：' + num);
+                    alert(t('qq_alert'));
                 }
             });
         }
+
+        /* 初始化语言（会把标题、按钮文字、页面文案一次性刷成当前语言） */
+        applyLang();
     })();
     </script>
 </body>
