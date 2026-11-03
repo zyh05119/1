@@ -278,14 +278,21 @@
                 ab_doc_title: 'About',
                 ab_back: '← Back to tools',
                 ab_sub: 'a happy soul from P5G',
-                ab_p1: 'Hi, this is 冷涩调...So I'm a girl whos obsessed with anime and music, and yeah i love animes.',
-                ab_p2: 'abt games, I've dabbled in basically everything: Identity V, Honor of Kings, Peacekeeper Elite, Valorant, Golden Spatula, Genshin Impact, Reverse: 1999, Honkai: Star Rail, Wuthering Waves... so yeah thats me, a random person who made this site',
+                ab_p1: 'Hi, this is 冷涩调...So I\'m a girl whos obsessed with anime and music, and yeah i love animes.',
+                ab_p2: 'abt games, I\'ve dabbled in basically everything: Identity V, Honor of Kings, Peacekeeper Elite, Valorant, Golden Spatula, Genshin Impact, Reverse: 1999, Honkai: Star Rail, Wuthering Waves... so yeah thats me, a random person who made this site',
                 ab_footer: 'Have a good day, guys'
             }
         };
 
         var lang = safeGet('lang') === 'en' ? 'en' : 'zh';
         var langToggle = document.getElementById('langToggle');
+        var toggleBtn = document.getElementById('themeToggle');
+
+        /* 元素缺失时直接提示，避免后续 null 报错 */
+        if (!langToggle || !toggleBtn) {
+            console.error('按钮元素未找到，检查 id 是否为 langToggle / themeToggle');
+            return;
+        }
 
         function t(key, vars) {
             var d = I18N[lang];
@@ -316,32 +323,34 @@
             langToggle.textContent = lang === 'zh' ? 'EN' : '中';
         }
 
-        langToggle.addEventListener('click', function () {
+        /* ================= 语言按钮 ================= */
+        langToggle.addEventListener('click', function (e) {
+            e.preventDefault();
             lang = lang === 'zh' ? 'en' : 'zh';
             safeSet('lang', lang);
             applyLang();
         });
 
-        /* ================= 主题切换（与 index / feedback 共用 theme 键） ================= */
-        var toggleBtn = document.getElementById('themeToggle');
+        /* ================= 主题切换 ================= */
         var isLight = safeGet('theme') === 'light';
 
-        if (isLight) {
-            document.body.classList.add('light-mode');
-            toggleBtn.textContent = '☀';
-        }
-
-        toggleBtn.addEventListener('click', function () {
-            isLight = !isLight;
+        function applyTheme() {
             if (isLight) {
                 document.body.classList.add('light-mode');
                 toggleBtn.textContent = '☀';
-                safeSet('theme', 'light');
             } else {
                 document.body.classList.remove('light-mode');
                 toggleBtn.textContent = '✦';
-                safeSet('theme', 'dark');
             }
+        }
+
+        applyTheme();
+
+        toggleBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            isLight = !isLight;
+            safeSet('theme', isLight ? 'light' : 'dark');
+            applyTheme();
         });
 
         /* ================= 天气 ================= */
@@ -349,6 +358,9 @@
             var tempEl = document.getElementById('weatherTemp');
             var cityEl = document.getElementById('weatherCity');
             var iconEl = document.getElementById('weatherIcon');
+            if (!tempEl || !cityEl || !iconEl) return;
+
+            if (typeof fetch !== 'function') return;
 
             var controller = new AbortController();
             var timeoutId = setTimeout(function () { controller.abort(); }, 6000);
@@ -390,7 +402,8 @@
                 })
                 .catch(function () { clearTimeout(timeoutId); });
         }
-        getWeather();
+
+        try { getWeather(); } catch (e) { /* 天气失败不影响按钮 */ }
 
         /* 初始化语言 */
         applyLang();
